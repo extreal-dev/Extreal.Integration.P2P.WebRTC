@@ -9,7 +9,7 @@ namespace Extreal.Integration.P2P.WebRTC
         public SocketIOOptions SocketOptions { get; private set; }
         public List<string> IceServerUrls { get; private set; }
 
-        protected PeerConfig(string url, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
+        public PeerConfig(string url, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
         {
             SignalingUrl = url;
             SocketOptions = socketOptions ?? new SocketIOOptions();
