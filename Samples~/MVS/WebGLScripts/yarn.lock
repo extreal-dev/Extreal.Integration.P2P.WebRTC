@@ -2,14 +2,11 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.p2p.webrtc@../../../../../../Packages/Extreal.Integration.P2P.WebRTC/WebScripts~/":
+"@extreal-dev/extreal.integration.p2p.webrtc@file:../../../../../../Packages/Extreal.Integration.P2P.WebRTC/WebScripts~":
   version "0.0.4"
   dependencies:
     "@extreal-dev/extreal.integration.web.common" "^0.0.3"
     socket.io-client "^4.7.1"
-
-"@extreal-dev/extreal.integration.web.common@../../../../../../Packages/Extreal.Integration.Web.Common/WebScripts~/":
-  version "0.0.5"
 
 "@extreal-dev/extreal.integration.web.common@^0.0.3":
   version "0.0.3"

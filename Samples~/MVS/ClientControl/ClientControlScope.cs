@@ -14,7 +14,8 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
                 "http://127.0.0.1:3010",
                 new SocketIOOptions
                 {
-                    ConnectionTimeout = TimeSpan.FromSeconds(3)
+                    ConnectionTimeout = TimeSpan.FromSeconds(3),
+                    Reconnection = false
                 },
                 new List<string>
                 {

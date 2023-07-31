@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "@extreal-dev/extreal.integration.p2p.webrtc": "../../../../../../Packages/Extreal.Integration.P2P.WebRTC/WebScripts~/",
-    "@extreal-dev/extreal.integration.web.common": "../../../../../../Packages/Extreal.Integration.Web.Common/WebScripts~/"
+    "@extreal-dev/extreal.integration.p2p.webrtc": "file:../../../../../../Packages/Extreal.Integration.P2P.WebRTC/WebScripts~/"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",
