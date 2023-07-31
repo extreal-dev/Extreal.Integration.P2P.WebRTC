@@ -1,9 +1,9 @@
-import { callback, addAction, addFunction } from "@extreal-dev/extreal.integration.web.common";
+import { addAction } from "@extreal-dev/extreal.integration.web.common";
+import { PeerAdapter } from "@extreal-dev/extreal.integration.p2p.webrtc";
+import { DataChannelClient } from "./DataChannelClient";
 
-addAction("DoAction", (str1, str2) => {
-    callback("HandleOnCallback", `param1=[${str1}]`, `param2=[${str2}]`);
-});
+const peerAdapter = new PeerAdapter();
+peerAdapter.adapt();
+const dataChannelClient = new DataChannelClient(peerAdapter.getPeerClient);
 
-addFunction("DoFunction", (str1, str2) => {
-    return `received param1=[${str1}] param2=[${str2}] in function`;
-});
+addAction("clear", dataChannelClient.clear);
