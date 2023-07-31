@@ -2,9 +2,14 @@
 
 ## How to test
 
+- Enter the following command in the `WebScripts~` directory.
+   ```bash
+   $ yarn
+   $ yarn dev
+   ```
 - Import the sample MVS from Package Manager.
 - Enter the following command in the `MVS/WebScripts` directory.
-   ```
+   ```bash
    $ yarn
    $ yarn dev
    ```

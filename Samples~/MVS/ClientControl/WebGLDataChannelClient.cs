@@ -4,7 +4,8 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
     public class WebGLDataChannelClient : DataChannelClient
     {
-        public override void Clear()
-            => WebGLHelper.CallAction("clear");
+        public WebGLDataChannelClient() => WebGLHelper.CallAction("start");
+
+        public override void Clear() => WebGLHelper.CallAction("clear");
     }
 }

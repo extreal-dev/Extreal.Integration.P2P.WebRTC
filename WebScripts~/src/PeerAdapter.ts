@@ -8,7 +8,11 @@ class PeerAdapter {
 
     public adapt = () => {
         addAction(this.withPrefix("WebGLPeerClient"), (jsonPeerConfig) => {
-            this.peerClient = new PeerClient(JSON.parse(jsonPeerConfig), {
+            const peerConfig = JSON.parse(jsonPeerConfig);
+            if (peerConfig.isDebug) {
+              console.log(peerConfig);
+            }
+            this.peerClient = new PeerClient(peerConfig, {
                 onStarted: () => callback(this.withPrefix("HandleOnStarted")),
                 onConnectFailed: (reason) => callback(this.withPrefix("HandleOnConnectFailed"), reason),
                 onDisconnected: (reason) => callback(this.withPrefix("HandleOnDisconnected"), reason),

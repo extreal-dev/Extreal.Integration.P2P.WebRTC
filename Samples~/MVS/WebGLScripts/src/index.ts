@@ -4,6 +4,7 @@ import { DataChannelClient } from "./DataChannelClient";
 
 const peerAdapter = new PeerAdapter();
 peerAdapter.adapt();
-const dataChannelClient = new DataChannelClient(peerAdapter.getPeerClient);
 
-addAction("clear", dataChannelClient.clear);
+let dataChannelClient: DataChannelClient;
+addAction("start", () => dataChannelClient = new DataChannelClient(peerAdapter.getPeerClient));
+addAction("clear", () => dataChannelClient.clear);
