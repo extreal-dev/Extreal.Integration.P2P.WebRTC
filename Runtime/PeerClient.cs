@@ -29,6 +29,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (IsRunning)
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
             if (Logger.IsDebug())

@@ -20,9 +20,6 @@ namespace Extreal.Integration.P2P.WebRTC
         [JsonPropertyName("status")]
         public ushort Status { get; set; }
 
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
-
         [JsonPropertyName("hosts")]
         public List<HostResponse> Hosts { get; set; }
     }

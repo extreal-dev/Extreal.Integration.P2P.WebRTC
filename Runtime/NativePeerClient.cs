@@ -79,17 +79,19 @@ namespace Extreal.Integration.P2P.WebRTC
                 {
                     return socket;
                 }
+                // Not covered by testing due to defensive implementation
                 StopSocket();
             }
 
             socket = new SocketIO(peerConfig.SignalingUrl, peerConfig.SocketOptions);
+            socket.OnConnected += ReceiveConnected;
             socket.On("message", ReceiveMessageAsync);
             socket.On("user disconnected", ReceiveUserDisconnectedAsync);
             socket.OnDisconnected += ReceiveDisconnectedAsync;
 
             try
             {
-                await socket.ConnectAsync().ConfigureAwait(false);
+                await socket.ConnectAsync().ConfigureAwait(true);
             }
             catch (ConnectionException e)
             {
@@ -97,12 +99,15 @@ namespace Extreal.Integration.P2P.WebRTC
                 throw;
             }
 
+            return socket;
+        }
+
+        private void ReceiveConnected(object sender, EventArgs e)
+        {
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Socket created: id={socket.Id}");
             }
-
-            return socket;
         }
 
         private async void ReceiveMessageAsync(SocketIOResponse response)
@@ -156,6 +161,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
                 default:
                 {
+                    // Not covered by testing due to defensive implementation
                     if (Logger.IsDebug())
                     {
                         Logger.LogDebug($"Unknown message received!!! type={message.Type}");
@@ -200,7 +206,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     Logger.LogDebug(response.ToString());
                 }
                 startHostResponse = response.GetValue<StartHostResponse>();
-            }, name).ConfigureAwait(false);
+            }, name).ConfigureAwait(true);
 
             await UniTask.WaitUntil(() => startHostResponse != null, cancellationToken: cancellation.Token);
             return startHostResponse;
@@ -216,7 +222,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     Logger.LogDebug(response.ToString());
                 }
                 listHostsResponse = response.GetValue<ListHostsResponse>();
-            }).ConfigureAwait(false);
+            }).ConfigureAwait(true);
 
             await UniTask.WaitUntil(() => listHostsResponse != null, cancellationToken: cancellation.Token);
             return listHostsResponse;
@@ -233,6 +239,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (pcDict.ContainsKey(to))
             {
+                // Not covered by testing due to defensive implementation
                 if (Logger.IsDebug())
                 {
                     Logger.LogDebug($"Send offer: Not sent as it already exists. to={to}");
@@ -253,21 +260,6 @@ namespace Extreal.Integration.P2P.WebRTC
                     await pc.SetLocalDescription(ref sd);
                     await SendSdpAsync(to, pc.LocalDescription);
                 });
-            /*HandlePc(
-                nameof(SendOffer),
-                to,
-                pc => pc.OnNegotiationNeeded += async () =>
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug($"OnNegotiationNeeded. from={to}");
-                    }
-                    var offerAsyncOp = pc.CreateOffer();
-                    await offerAsyncOp;
-                    var sd = offerAsyncOp.Desc;
-                    await pc.SetLocalDescription(ref sd);
-                    await SendSdpAsync(to, pc.LocalDescription);
-                });*/
         }
 
         protected override async UniTask DoStopAsync()
@@ -294,8 +286,10 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (socket is null)
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
+            socket.OnConnected -= ReceiveConnected;
             socket.OnDisconnected -= ReceiveDisconnectedAsync;
             socket.Dispose();
             socket = null;
@@ -305,6 +299,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (pcDict.ContainsKey(id))
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
 
@@ -314,6 +309,7 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 if (string.IsNullOrEmpty(e.Candidate))
                 {
+                    // Not covered by testing due to defensive implementation
                     return;
                 }
                 if (Logger.IsDebug())
@@ -350,11 +346,13 @@ namespace Extreal.Integration.P2P.WebRTC
                     case RTCIceConnectionState.Failed:
                     case RTCIceConnectionState.Closed:
                     {
+                        // Not covered by testing due to defensive implementation
                         ClosePc(id);
                         break;
                     }
                     default:
                     {
+                        // Not covered by testing due to defensive implementation
                         throw new Exception("Unexpected Case");
                     }
                 }
@@ -406,7 +404,7 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 Logger.LogDebug($"Send message: {message}");
             }
-            await (await GetSocketAsync()).EmitAsync("message", message).ConfigureAwait(false);
+            await (await GetSocketAsync()).EmitAsync("message", message).ConfigureAwait(true);
         }
 
         private async UniTask ReceiveJoinAsync(string from)
@@ -490,6 +488,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             catch (Exception e)
             {
+                // Not covered by testing due to defensive implementation
                 if (Logger.IsDebug())
                 {
                     Logger.LogDebug($"Error has occurred at {methodName}", e);
@@ -512,6 +511,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             catch (Exception e)
             {
+                // Not covered by testing due to defensive implementation
                 if (Logger.IsDebug())
                 {
                     Logger.LogDebug($"Error has occurred at {methodName}", e);

@@ -1,0 +1,26 @@
+{
+    "name": "Extreal.Integration.P2P.WebRTC.MVS",
+    "rootNamespace": "Extreal.Integration.P2P.WebRTC.MVS",
+    "references": [
+        "Unity.Collections",
+        "Unity.TextMeshPro",
+        "Unity.WebRTC",
+        "UniTask",
+        "UniRx",
+        "VContainer",
+        "Extreal.Core.Logging",
+        "Extreal.Core.Common",
+        "Extreal.Core.StageNavigation",
+        "Extreal.Integration.Web.Common",
+        "Extreal.Integration.P2P.WebRTC"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

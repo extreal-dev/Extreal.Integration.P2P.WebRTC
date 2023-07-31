@@ -39,7 +39,7 @@ type PeerConfig = {
 type PeerClientCallbacks = {
     onStarted: OnStarted;
     onConnectFailed: (reason: string) => void;
-    onDissconnected: (reason: string) => void;
+    onDisconnected: (reason: string) => void;
 };
 
 class PeerClient {
@@ -180,7 +180,7 @@ class PeerClient {
         if (this.isDebug) {
             console.log(reason);
         }
-        this.callbacks.onDissconnected(reason);
+        this.callbacks.onDisconnected(reason);
     };
 
     public startHost = (name: string, handle: (response: StartHostResponse) => void) => {
