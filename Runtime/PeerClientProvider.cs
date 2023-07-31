@@ -9,8 +9,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
 #if !UNITY_WEBGL || UNITY_EDITOR
             return new NativePeerClient(peerConfig);
-#endif
-#if UNITY_WEBGL && !UNITY_EDITOR
+#else
             return new WebGLPeerClient(new WebGLPeerConfig(peerConfig));
 #endif
         }
