@@ -28,24 +28,24 @@
 
 ## Test cases for manual testing
 
-### ホスト
+### Host
 
-- グループ選択画面
-  - 名前を指定してグループを作れること（ホストの開始）
-  - 名前が重複した場合はエラー通知されること（ホスト名の重複）
-  - 接続できずグループを作れない場合はエラー通知されること（接続失敗）
-- バーチャル空間
-  - クライアントがグループに参加できること（クライアントの参加）
-  - クライアントがグループから退出できること（クライアントの退出）
-  - グループ選択画面に戻れること（ホストの停止）
-  - 接続が中断した場合はエラー通知されること（接続中断）
+- Group selection screen
+- Ability to create a group by specifying a name (host start)
+  - Error notification if a name is duplicated (duplicate host name)
+  - Error notification if a group cannot be created because a connection cannot be made (connection failure)
+- Virtual space
+  - Client can join a group (client join)
+  - Clients can leave the group (client exit)
+  - Ability to return to the group selection screen (host stop)
+  - Error notification if connection is interrupted (connection interrupted)
 
-### クライアント
+### Client
 
-- グループ選択画面
-  - グループ一覧を取得できること（ホスト一覧の取得）
-  - グループに参加できること（ホストに参加）
-  - 接続できずグループ一覧を取得できない場合はエラー通知されること（接続失敗）
-- バーチャル空間
-  - グループ選択画面に戻れること（ホストから退出） 
-  - 接続が中断した場合はエラー通知されること（接続中断）
+- Group selection screen
+  - Ability to retrieve group list (retrieve host list)
+  - Ability to join a group (join host)
+  - Error notification if unable to connect and obtain group list (connection failure)
+- Virtual space
+  - Ability to return to the group selection screen (leave host)
+  - Error notification if connection is interrupted (connection interrupted)
