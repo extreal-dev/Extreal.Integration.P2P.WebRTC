@@ -95,7 +95,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             catch (ConnectionException e)
             {
-                FireOnDisconnected(e.Message);
+                FireOnConnectFailed(e.Message);
                 throw;
             }
 
@@ -480,6 +480,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (!pcDict.TryGetValue(id, out var pc))
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
             try
@@ -503,6 +504,7 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (!pcDict.TryGetValue(id, out var pc))
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
             try

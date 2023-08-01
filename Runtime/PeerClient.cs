@@ -57,6 +57,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             if (reason == "io client disconnect")
             {
+                // Not covered by testing due to defensive implementation
                 return;
             }
             onDisconnected.OnNext(reason);
