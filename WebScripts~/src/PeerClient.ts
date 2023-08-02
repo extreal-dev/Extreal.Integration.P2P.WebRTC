@@ -42,6 +42,9 @@ type PeerClientCallbacks = {
     onDisconnected: (reason: string) => void;
 };
 
+/**
+ * Client class for P2P connections.
+ */
 class PeerClient {
     private readonly isDebug: boolean;
 
@@ -70,10 +73,18 @@ class PeerClient {
         this.hostId = null;
     }
 
+    /**
+     * Adds a hook that is called when a peer connection is created.
+     * @param hook - Hook
+     */
     public addPcCreateHook = (hook: PcCreateHook) => {
         this.pcCreateHooks.push(hook);
     };
 
+    /**
+     * Adds a hook that is called when a peer connection is closed.
+     * @param hook - Hook
+     */
     public addPcCloseHook = (hook: PcCloseHook) => {
         this.pcCloseHooks.push(hook);
     };
