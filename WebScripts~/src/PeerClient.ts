@@ -229,7 +229,7 @@ class PeerClient {
 
         await this.createPcAsync(to, true);
 
-        await this.handlePcAsync("sendOffer", to, async (pc: RTCPeerConnection) => {
+        await this.handlePcAsync("sendOfferAsync", to, async (pc: RTCPeerConnection) => {
             const sd = await pc.createOffer();
             await pc.setLocalDescription(sd);
             this.sendSdp(to, pc.localDescription as RTCSessionDescription);
