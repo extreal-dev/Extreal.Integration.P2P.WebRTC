@@ -8,12 +8,12 @@
         /// <summary>
         /// Id.
         /// </summary>
-        public string Id { get; private set; }
+        public string Id { get;}
 
         /// <summary>
         /// Name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get;}
 
         /// <summary>
         /// Creates a new host.
