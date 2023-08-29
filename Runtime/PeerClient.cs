@@ -108,7 +108,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// Starts as host.
         /// </summary>
         /// <param name="name">Host name</param>
-        /// <exception cref="HostNameAlreadyExistsException">when hostname already exists at creation of host.</exception>
+        /// <exception cref="HostNameAlreadyExistsException">When hostname already exists at creation of host.</exception>
         public async UniTask StartHostAsync(string name)
         {
             if (Logger.IsDebug())
