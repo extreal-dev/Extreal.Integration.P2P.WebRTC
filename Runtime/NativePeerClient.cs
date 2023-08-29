@@ -329,6 +329,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     case RTCIceConnectionState.New:
                     case RTCIceConnectionState.Checking:
                     case RTCIceConnectionState.Disconnected:
+                    case RTCIceConnectionState.Max:
                     {
                         // do nothing
                         break;
