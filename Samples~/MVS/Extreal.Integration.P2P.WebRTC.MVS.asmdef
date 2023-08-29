@@ -2,7 +2,6 @@
     "name": "Extreal.Integration.P2P.WebRTC.MVS",
     "rootNamespace": "Extreal.Integration.P2P.WebRTC.MVS",
     "references": [
-        "Unity.Collections",
         "Unity.TextMeshPro",
         "Unity.WebRTC",
         "UniTask",
