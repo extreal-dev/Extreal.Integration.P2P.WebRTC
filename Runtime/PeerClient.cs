@@ -41,7 +41,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <summary>
         /// Disposables.
         /// </summary>
-        protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
+        protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         /// <summary>
         /// Fires the OnStarted.
