@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { createRedisAdapter, createRedisClient, Server, Socket } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
 
-type CreateHostRespone = {
+type CreateHostResponse = {
     status: number;
     message: string;
 };
