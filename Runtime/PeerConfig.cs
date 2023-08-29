@@ -11,17 +11,17 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <summary>
         /// URL of the signaling server.
         /// </summary>
-        public string SignalingUrl { get; private set; }
+        public string SignalingUrl { get; }
 
         /// <summary>
         /// Socket options.
         /// </summary>
-        public SocketIOOptions SocketOptions { get; private set; }
+        public SocketIOOptions SocketOptions { get; }
 
         /// <summary>
         /// Ice server URLs.
         /// </summary>
-        public List<string> IceServerUrls { get; private set; }
+        public List<string> IceServerUrls { get; }
 
         /// <summary>
         /// Creates a new peer configuration.
