@@ -278,7 +278,6 @@ namespace Extreal.Integration.P2P.WebRTC
             }
 
             pcDict.Clear();
-            clientState.Clear();
             StopSocket();
         }
 

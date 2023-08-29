@@ -13,8 +13,8 @@ namespace Extreal.Integration.P2P.WebRTC
         internal IObservable<Unit> OnStarted => onStarted.AddTo(disposables);
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
-        private readonly BoolReactiveProperty isIceCandidateGatheringFinished = new BoolReactiveProperty(false);
-        private readonly BoolReactiveProperty isOfferAnswerProcessFinished = new BoolReactiveProperty(false);
+        private readonly Subject<bool> isIceCandidateGatheringFinished = new Subject<bool>();
+        private readonly Subject<bool> isOfferAnswerProcessFinished = new Subject<bool>();
 
         [SuppressMessage("CodeCracker", "CC0092")]
         internal NativeClientState()
@@ -27,14 +27,8 @@ namespace Extreal.Integration.P2P.WebRTC
                 .AddTo(disposables);
         }
 
-        internal void FinishIceCandidateGathering() => isIceCandidateGatheringFinished.Value =true;
-        internal void FinishOfferAnswerProcess() => isOfferAnswerProcessFinished.Value = true;
-
-        internal void Clear()
-        {
-            isIceCandidateGatheringFinished.Value = false;
-            isOfferAnswerProcessFinished.Value = false;
-        }
+        internal void FinishIceCandidateGathering() => isIceCandidateGatheringFinished.OnNext(true);
+        internal void FinishOfferAnswerProcess() => isOfferAnswerProcessFinished.OnNext(true);
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
     }
