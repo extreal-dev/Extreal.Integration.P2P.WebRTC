@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Extreal.Integration.P2P.WebRTC.MVS.App
 {
     [CreateAssetMenu(
-        menuName = "Web.Common/" + nameof(StageConfig),
+        menuName = "P2P.WebRTC/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
     public class StageConfig : StageConfigBase<StageName, SceneName>
     {
