@@ -67,9 +67,9 @@ namespace Extreal.Integration.P2P.WebRTC
             return result;
         }
 
-        protected override UniTask DoStartClientAsync(string hostId)
+        protected override async UniTask DoStartClientAsync(string hostId)
 #pragma warning disable CS1998
-            => UniTask.Create(async () => WebGLHelper.CallAction(WithPrefix(nameof(DoStartClientAsync)), hostId));
+            => WebGLHelper.CallAction(WithPrefix(nameof(DoStartClientAsync)), hostId);
 #pragma warning restore CS1998
 
         protected override UniTask DoStopAsync()
