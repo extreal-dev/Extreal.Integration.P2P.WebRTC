@@ -26,7 +26,13 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly NativeClientState clientState;
         private CancellationTokenSource cancellation;
 
+        /// <summary>
+        /// Role of P2P communication
+        /// </summary>
         public PeerRole Role { get; private set; }
+        /// <summary>
+        /// HostId of P2P communication
+        /// </summary>
         public string HostId { get; private set; }
 
         public NativePeerClient(PeerConfig peerConfig)
@@ -65,9 +71,17 @@ namespace Extreal.Integration.P2P.WebRTC
             socket?.Dispose();
         }
 
+        /// <summary>
+        /// Add action type to peer connection create hook
+        /// </summary>
+        /// <param name="hook"></param>
         public void AddPcCreateHook(Action<string, bool, RTCPeerConnection> hook)
             => pcCreateHooks.Add(hook);
 
+        /// <summary>
+        /// Add action type to peer connection close hook
+        /// </summary>
+        /// <param name="hook"></param>
         public void AddPcCloseHook(Action<string> hook)
             => pcCloseHooks.Add(hook);
 
