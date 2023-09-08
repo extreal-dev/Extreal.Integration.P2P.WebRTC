@@ -72,13 +72,13 @@ namespace Extreal.Integration.P2P.WebRTC
             => WebGLHelper.CallAction(WithPrefix(nameof(DoStartClientAsync)), hostId);
 #pragma warning restore CS1998
 
-        protected override UniTask DoStopAsync()
+        protected override async UniTask DoStopAsync()
         {
 #pragma warning disable CS1998
             cancellation.Cancel();
             cancellation.Dispose();
             cancellation = new CancellationTokenSource();
-            return UniTask.Create(async () => WebGLHelper.CallAction(WithPrefix(nameof(DoStopAsync))));
+            WebGLHelper.CallAction(WithPrefix(nameof(DoStopAsync)));
 #pragma warning restore CS1998
         }
 
