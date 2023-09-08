@@ -30,6 +30,12 @@ namespace Extreal.Integration.P2P.WebRTC
         internal void FinishIceCandidateGathering() => isIceCandidateGatheringFinished.OnNext(true);
         internal void FinishOfferAnswerProcess() => isOfferAnswerProcessFinished.OnNext(true);
 
+        internal void Clear()
+        {
+            isIceCandidateGatheringFinished.OnNext(false);
+            isOfferAnswerProcessFinished.OnNext(false);
+        }
+
         protected override void ReleaseManagedResources() => disposables.Dispose();
     }
 }
