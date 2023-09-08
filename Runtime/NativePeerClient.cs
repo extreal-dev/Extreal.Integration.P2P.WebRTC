@@ -72,14 +72,14 @@ namespace Extreal.Integration.P2P.WebRTC
         }
 
         /// <summary>
-        /// Add action type to peer connection create hook
+        /// Add a process to be called when creating a peer connection
         /// </summary>
         /// <param name="hook"></param>
         public void AddPcCreateHook(Action<string, bool, RTCPeerConnection> hook)
             => pcCreateHooks.Add(hook);
 
         /// <summary>
-        /// Add action type to peer connection close hook
+        /// Add a process to be called when a peer connection is terminated
         /// </summary>
         /// <param name="hook"></param>
         public void AddPcCloseHook(Action<string> hook)
