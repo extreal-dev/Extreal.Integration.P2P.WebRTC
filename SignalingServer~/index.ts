@@ -72,10 +72,10 @@ io.on("connection", (socket: Socket) => {
     // @ts-ignore To store additional information in the socket
     const getHost = (): string => socket.host;
 
-    socket.on("create host", (host: string, callback: (response: CreateHostRespone) => void) => {
+    socket.on("create host", (host: string, callback: (response: CreateHostResponse) => void) => {
         logOn("create host", socket);
 
-        const wrapper = (response: CreateHostRespone) => {
+        const wrapper = (response: CreateHostResponse) => {
             log(() => response);
             callback(response);
         };
