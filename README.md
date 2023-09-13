@@ -8,7 +8,7 @@
    $ yarn dev
    ```
 - Import the sample MVS from Package Manager.
-- Enter the following command in the `MVS/WebScripts` directory.
+- Enter the following command in the `MVS/WebGLScripts~` directory.
    ```bash
    $ yarn
    $ yarn dev
