@@ -36,6 +36,7 @@
   - Error notification if a group cannot be created because a connection cannot be made (connection failure)
 - Virtual space
   - Client can join a group (client join)
+  - Two clients can join a group (multiple client join)
   - Clients can leave the group (client exit)
   - Ability to return to the group selection screen (host stop)
   - Error notification if connection is interrupted (connection interrupted)
@@ -47,5 +48,6 @@
   - Ability to join a group (join host)
   - Error notification if unable to connect and obtain group list (connection failure)
 - Virtual space
+  - 2nd clients can join a group while still joined (multiple client join)
   - Ability to return to the group selection screen (leave host)
   - Error notification if connection is interrupted (connection interrupted)
