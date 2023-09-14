@@ -1,0 +1,21 @@
+{
+    "name": "Extreal.Integration.P2P.WebRTC",
+    "rootNamespace": "Extreal.Integration.P2P.WebRTC",
+    "references": [
+        "Unity.WebRTC",
+        "UniTask",
+        "UniRx",
+        "Extreal.Core.Logging",
+        "Extreal.Core.Common",
+        "Extreal.Integration.Web.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
