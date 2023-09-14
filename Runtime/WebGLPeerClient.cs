@@ -79,8 +79,8 @@ namespace Extreal.Integration.P2P.WebRTC
             cancellation.Dispose();
             cancellation = new CancellationTokenSource();
             WebGLHelper.CallAction(WithPrefix(nameof(DoStopAsync)));
-#pragma warning restore CS1998
         }
+#pragma warning restore CS1998
 
         private static string WithPrefix(string name) => $"{nameof(WebGLPeerClient)}#{name}";
 
