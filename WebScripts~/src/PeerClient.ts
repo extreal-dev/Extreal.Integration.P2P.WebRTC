@@ -296,7 +296,7 @@ class PeerClient {
                 }
                 case "failed":
                 case "closed": {
-                    // do nothing
+                    this.closePc(id);
                     break;
                 }
             }
