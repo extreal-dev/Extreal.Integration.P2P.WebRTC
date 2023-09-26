@@ -1,6 +1,6 @@
 {
   "name": "@extreal-dev/extreal.integration.p2p.webrtc",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "scripts": {
     "dev": "rollup --config rollup.config.ts --configPlugin typescript",
     "prod": "rollup --config rollup.config.ts --configPlugin typescript --environment BUILD:production"
