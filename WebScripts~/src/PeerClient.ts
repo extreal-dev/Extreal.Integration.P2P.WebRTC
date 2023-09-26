@@ -265,7 +265,8 @@ class PeerClient {
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
 
-        pc.onicecandidate = (event) => {
+        pc.onicecandidate = async (event) => {
+            await new Promise(resolve => setTimeout(resolve, 300));
             if (!event.candidate) {
                 return;
             }
