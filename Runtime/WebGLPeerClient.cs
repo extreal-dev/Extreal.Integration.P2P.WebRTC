@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_WEBGL && !UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -152,3 +153,4 @@ namespace Extreal.Integration.P2P.WebRTC
         public string[] Urls { get; set; }
     }
 }
+#endif
