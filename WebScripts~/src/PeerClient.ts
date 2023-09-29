@@ -1,7 +1,7 @@
 import { io, Socket, SocketOptions, ManagerOptions } from "socket.io-client";
 import { ClientState, OnStarted } from "./ClientState";
 import { PeerRole } from "./PeerRole";
-import { isAsync } from "@extreal-dev/extreal.integration.web.common";
+import { isAsync, waitUntil } from "@extreal-dev/extreal.integration.web.common";
 
 type PcCreateHook = (id: string, isOffer: boolean, pc: RTCPeerConnection) => void | Promise<void>;
 
@@ -143,7 +143,7 @@ class PeerClient {
                 break;
             }
             case "candidate": {
-                this.receiveCandidate(from, new RTCIceCandidate(message.ice));
+                await this.receiveCandidate(from, new RTCIceCandidate(message.ice));
                 break;
             }
             case "bye": {
@@ -375,7 +375,8 @@ class PeerClient {
         }
     };
 
-    private receiveCandidate = (from: string, candidate: RTCIceCandidate) => {
+    private receiveCandidate = async (from: string, candidate: RTCIceCandidate) => {
+        await waitUntil(() => this.pcMap.has(from), () => false, 300);
         this.handlePc("receiveCandidate", from, (pc: RTCPeerConnection) => pc.addIceCandidate(candidate));
     };
 

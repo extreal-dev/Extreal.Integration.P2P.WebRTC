@@ -1,3 +1,4 @@
+#if UNITY_WEBGL && !UNITY_EDITOR
 using Extreal.Integration.Web.Common;
 
 namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
@@ -9,3 +10,4 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         public override void Clear() => WebGLHelper.CallAction("clear");
     }
 }
+#endif
