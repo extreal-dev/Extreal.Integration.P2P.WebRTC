@@ -11,7 +11,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         protected override void Configure(IContainerBuilder builder)
         {
             var peerConfig = new PeerConfig(
-                "http://127.0.0.1:3010",
+                "https://signaling.extreal.net,
                 new SocketIOOptions
                 {
                     ConnectionTimeout = TimeSpan.FromSeconds(3),
