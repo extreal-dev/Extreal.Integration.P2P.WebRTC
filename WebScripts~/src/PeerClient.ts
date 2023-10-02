@@ -1,5 +1,5 @@
 import { io, Socket, SocketOptions, ManagerOptions } from "socket.io-client";
-import { ClientState, OnStarted } from "./ClientState";
+import { ClientState, OnStarted, OnStartedFailed } from "./ClientState";
 import { PeerRole } from "./PeerRole";
 import { isAsync, waitUntil } from "@extreal-dev/extreal.integration.web.common";
 
@@ -38,6 +38,7 @@ type PeerConfig = {
 
 type PeerClientCallbacks = {
     onStarted: OnStarted;
+    onStartedFailed: OnStartedFailed;
     onConnectFailed: (reason: string) => void;
     onDisconnected: (reason: string) => void;
 };
@@ -67,7 +68,7 @@ class PeerClient {
         this.pcMap = new Map();
         this.pcCreateHooks = [];
         this.pcCloseHooks = [];
-        this.clientState = new ClientState(callbacks.onStarted);
+        this.clientState = new ClientState(callbacks.onStarted, callbacks.onStartedFailed);
         this.callbacks = callbacks;
         this.role = PeerRole.None;
         this.hostId = null;
@@ -283,7 +284,9 @@ class PeerClient {
                 case "new":
                 case "checking":
                 case "disconnected": {
-                    // do nothing
+                    if (this.role === PeerRole.Client) {
+                        this.clientState.fireOnStartedFailed();
+                    }
                     break;
                 }
                 case "connected":
@@ -294,6 +297,10 @@ class PeerClient {
                     break;
                 }
                 case "failed":
+                    if (this.role === PeerRole.Client) {
+                        this.clientState.fireOnStartedFailed();
+                    }
+                    break;
                 case "closed": {
                     this.closePc(id);
                     break;
