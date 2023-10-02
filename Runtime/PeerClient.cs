@@ -72,7 +72,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </summary>
         protected void FireOnStartedFailed()
         {
-            if (!IsRunning)
+            if (IsRunning)
             {
                 // Not covered by testing due to defensive implementation
                 return;
