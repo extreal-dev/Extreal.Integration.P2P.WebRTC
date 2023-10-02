@@ -344,6 +344,11 @@ namespace Extreal.Integration.P2P.WebRTC
                     case RTCIceConnectionState.New:
                     case RTCIceConnectionState.Checking:
                     case RTCIceConnectionState.Disconnected:
+                        if (Role == PeerRole.Client)
+                        {
+                            FireOnStartedFailed();
+                        }
+                        break;
                     case RTCIceConnectionState.Max:
                     {
                         // do nothing
@@ -359,6 +364,11 @@ namespace Extreal.Integration.P2P.WebRTC
                         break;
                     }
                     case RTCIceConnectionState.Failed:
+                        if (Role == PeerRole.Client)
+                        {
+                            FireOnStartedFailed();
+                        }
+                        break;
                     case RTCIceConnectionState.Closed:
                     {
                         // Not covered by testing due to defensive implementation

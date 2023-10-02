@@ -22,6 +22,12 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
         /// <summary>
+        /// Invokes immediately after the host or client starts failed.
+        /// </summary>
+        public IObservable<Unit> OnStartedFailed => onStartedFailed.AddTo(Disposables);
+        private readonly Subject<Unit> onStartedFailed = new Subject<Unit>();
+
+        /// <summary>
         /// Invokes immediately after the host or client has failed to connect to the signaling server.
         /// </summary>
         public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
@@ -59,6 +65,24 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             IsRunning = true;
             onStarted.OnNext(Unit.Default);
+        }
+
+        /// <summary>
+        /// Fires the OnStartedFailed.
+        /// </summary>
+        protected void FireOnStartedFailed()
+        {
+            if (!IsRunning)
+            {
+                // Not covered by testing due to defensive implementation
+                return;
+            }
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug("P2P started failed");
+            }
+            IsRunning = false;
+            onStartedFailed.OnNext(Unit.Default);
         }
 
         /// <summary>
