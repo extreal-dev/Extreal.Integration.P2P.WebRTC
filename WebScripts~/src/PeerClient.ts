@@ -282,21 +282,24 @@ class PeerClient {
             }
             switch (pc.iceConnectionState) {
                 case "new":
-                case "checking":
-                case "disconnected": {
-                    if (this.role === PeerRole.Client) {
-                        this.clientState.fireOnStartedFailed();
-                    }
                     break;
-                }
+                case "checking":
+                    break;
                 case "connected":
                     if (this.role === PeerRole.Client) { 
                         this.clientState.finishHostConnection(this.hostId === id);
                         this.clientState.fireOnClientStarted(); 
                     }
+                    break
                 case "completed": {
                     if (this.role === PeerRole.Client) {
                         this.clientState.finishIceCandidateGathering();
+                    }
+                    break;
+                }
+                case "disconnected": {
+                    if (this.role === PeerRole.Client) {
+                        this.clientState.fireOnStartedFailed();
                     }
                     break;
                 }
