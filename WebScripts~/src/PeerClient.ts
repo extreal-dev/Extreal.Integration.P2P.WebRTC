@@ -285,14 +285,8 @@ class PeerClient {
             switch (pc.iceConnectionState) {
                 case "new":
                 case "checking":
-                    break;
                 case "disconnected": {
-                    window.setTimeout(() => {
-                        console.log('ICE connection failed due to disconnection timeout');
-                        }, 5000);
-                    if (this.role === PeerRole.Client) {
-                        this.clientState.fireOnStartedFailed();
-                    }
+                    // do nothing
                     break;
                 }
                 case "connected":
@@ -302,7 +296,6 @@ class PeerClient {
                     }
                     break;
                 }
-
                 case "failed":
                 case "closed": {
                     if (this.role === PeerRole.Client) {
