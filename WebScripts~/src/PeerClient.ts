@@ -423,10 +423,15 @@ class PeerClient {
     private negotiationCancel = (): (() => boolean) => {
         const startTime = Date.now();
         return () => {
-          const elapsedTime = Date.now() - startTime;
-          return elapsedTime >= this.peerConfig.negotiationTimeoutSeconds*1000;
+            const elapsedTime = Date.now() - startTime;
+            const isTimeout = elapsedTime >= this.peerConfig.negotiationTimeoutSeconds * 1000;
+            if (isTimeout) {
+                this.clientState.fireOnStartedFailed();
+            }
+            return isTimeout;
         };
     };
+    
       
     private logError = (funcName: string, e: unknown) => {
         if (this.isDebug) {
