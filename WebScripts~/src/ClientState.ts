@@ -30,8 +30,9 @@ class ClientState {
         if (isConnectionWithHost) {
             this.isHostConnected = true;
             this.fireOnStarted();
+        } else {
+            this.isHostConnected = false;
         }
-        this.isHostConnected = false;
     };
 
     private fireOnStarted = () => {
