@@ -282,7 +282,6 @@ class PeerClient {
             }
             switch (pc.iceConnectionState) {
                 case "new":
-                    break;
                 case "checking":
                     break;
                 case "connected":
