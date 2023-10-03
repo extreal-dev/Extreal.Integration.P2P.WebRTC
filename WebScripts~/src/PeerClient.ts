@@ -284,6 +284,15 @@ class PeerClient {
                 case "new":
                 case "checking":
                     break;
+                case "disconnected": {
+                    window.setTimeout(() => {
+                        console.log('ICE connection failed due to disconnection timeout');
+                        }, 5000);
+                    if (this.role === PeerRole.Client) {
+                        this.clientState.fireOnStartedFailed();
+                    }
+                    break;
+                }
                 case "connected":
                 case "completed": {
                     if (this.role === PeerRole.Client && this.hostId === id) {
@@ -291,15 +300,7 @@ class PeerClient {
                     }
                     break;
                 }
-                case "disconnected": {
-                    window.setTimeout(() => {
-                        console.log('ICE connection failed due to disconnection timeout');
-                      }, 5000);
-                    if (this.role === PeerRole.Client) {
-                        this.clientState.fireOnStartedFailed();
-                    }
-                    break;
-                }
+
                 case "failed":
                     if (this.role === PeerRole.Client) {
                         this.clientState.fireOnStartedFailed();

@@ -41,4 +41,4 @@ class ClientState {
 }
 
 export type { OnStarted };
-    export { ClientState, OnStartedFailed };
+export { ClientState, OnStartedFailed };

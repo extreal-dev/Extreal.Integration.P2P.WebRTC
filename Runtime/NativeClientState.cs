@@ -15,14 +15,13 @@ namespace Extreal.Integration.P2P.WebRTC
 
         private readonly Subject<bool> isIceCandidateGatheringFinished = new Subject<bool>();
         private readonly Subject<bool> isOfferAnswerProcessFinished = new Subject<bool>();
-        private readonly Subject<bool> isHostConnected = new Subject<bool>();
 
         [SuppressMessage("CodeCracker", "CC0092")]
         internal NativeClientState()
         {
             isIceCandidateGatheringFinished.AddTo(disposables);
             isOfferAnswerProcessFinished.AddTo(disposables);
-            Observable.CombineLatest(isIceCandidateGatheringFinished, isOfferAnswerProcessFinished, isHostConnected)
+            Observable.CombineLatest(isIceCandidateGatheringFinished, isOfferAnswerProcessFinished)
                 .Where(readies => readies.All(ready => ready))
                 .Subscribe(_ => onStarted.OnNext(Unit.Default))
                 .AddTo(disposables);
@@ -30,13 +29,11 @@ namespace Extreal.Integration.P2P.WebRTC
 
         internal void FinishIceCandidateGathering() => isIceCandidateGatheringFinished.OnNext(true);
         internal void FinishOfferAnswerProcess() => isOfferAnswerProcessFinished.OnNext(true);
-        internal void FinishHostConnection(bool isConnectionWithHost) => isHostConnected.OnNext(isConnectionWithHost);
 
         internal void Clear()
         {
             isIceCandidateGatheringFinished.OnNext(false);
             isOfferAnswerProcessFinished.OnNext(false);
-            isHostConnected.OnNext(false);
         }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
