@@ -31,6 +31,7 @@ type Message = {
 
 type PeerConfig = {
     url: string;
+    negotiationTimeoutSeconds: number; 
     socketOptions: SocketOptions & ManagerOptions;
     pcConfig: RTCConfiguration;
     isDebug: boolean;
@@ -276,10 +277,11 @@ class PeerClient {
             this.sendIce(id, event.candidate);
         };
 
-        pc.oniceconnectionstatechange = () => {
+        pc.oniceconnectionstatechange = async () => {
             if (this.isDebug) {
                 console.log(`Receive ice connection change: state=${pc.iceConnectionState} id=${id}`);
             }
+            await this.waitUntilTimeOut(pc.iceConnectionState);
             switch (pc.iceConnectionState) {
                 case "new":
                 case "checking":
@@ -302,11 +304,10 @@ class PeerClient {
                 }
 
                 case "failed":
+                case "closed": {
                     if (this.role === PeerRole.Client) {
                         this.clientState.fireOnStartedFailed();
                     }
-                    break;
-                case "closed": {
                     this.closePc(id);
                     break;
                 }
@@ -418,6 +419,22 @@ class PeerClient {
         }
     };
 
+    private async waitUntilTimeOut(iceConnectionState: RTCIceConnectionState) {
+        const isNotCheckingOrDisconnected = iceConnectionState !== "checking" && iceConnectionState !== "disconnected";
+        if (isNotCheckingOrDisconnected) {
+            return
+        }
+        await waitUntil(() => isNotCheckingOrDisconnected, this.negotiationCancel(), 300);
+    }
+
+    private negotiationCancel = (): (() => boolean) => {
+        const startTime = Date.now();
+        return () => {
+          const elapsedTime = Date.now() - startTime;
+          return elapsedTime >= this.peerConfig.negotiationTimeoutSeconds*1000;
+        };
+    };
+      
     private logError = (funcName: string, e: unknown) => {
         if (this.isDebug) {
             console.error(`Error has occurred at ${funcName}`, e);

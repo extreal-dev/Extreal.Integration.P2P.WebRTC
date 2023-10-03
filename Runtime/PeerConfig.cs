@@ -14,6 +14,11 @@ namespace Extreal.Integration.P2P.WebRTC
         public string SignalingUrl { get; }
 
         /// <summary>
+        /// Timeout value in seconds for the P2P negotiation process.
+        /// </summary>
+        public int NegotiationTimeoutSeconds { get; }
+
+        /// <summary>
         /// Socket options.
         /// </summary>
         public SocketIOOptions SocketOptions { get; }
@@ -29,9 +34,10 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <param name="url">URL of the signaling server</param>
         /// <param name="socketOptions">Socket options</param>
         /// <param name="iceServerUrls">Ice server URLs</param>
-        public PeerConfig(string url, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
+        public PeerConfig(string url, int negotiationTimeoutSeconds, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
         {
             SignalingUrl = url;
+            NegotiationTimeoutSeconds = negotiationTimeoutSeconds;
             SocketOptions = socketOptions ?? new SocketIOOptions();
             IceServerUrls = iceServerUrls ?? new List<string>();
         }
