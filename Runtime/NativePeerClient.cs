@@ -356,23 +356,14 @@ namespace Extreal.Integration.P2P.WebRTC
                         break;
                     }
                     case RTCIceConnectionState.Connected:
-                        if (Role == PeerRole.Client)
-                        {
-                            clientState.FinishHostConnection(HostId == id);
-
-                        }
-                        else
-                        {
-                            clientState.FinishHostConnection(true);
-                        }
-
-                        break;
                     case RTCIceConnectionState.Completed:
                     {
                         if (Role == PeerRole.Client)
                         {
                             clientState.FinishIceCandidateGathering();
+                            clientState.FinishHostConnection(HostId == id);
                         }
+                        clientState.FinishHostConnection(true);
                         break;
                     }
                     case RTCIceConnectionState.Failed:
