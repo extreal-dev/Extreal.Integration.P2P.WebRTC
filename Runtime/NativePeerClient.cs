@@ -343,6 +343,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 {
                     case RTCIceConnectionState.New:
                     case RTCIceConnectionState.Checking:
+                        break;
                     case RTCIceConnectionState.Disconnected:
                         if (Role == PeerRole.Client)
                         {
@@ -360,7 +361,11 @@ namespace Extreal.Integration.P2P.WebRTC
                             clientState.FinishHostConnection(HostId == id);
 
                         }
-                        clientState.FinishHostConnection(true);
+                        else
+                        {
+                            clientState.FinishHostConnection(true);
+                        }
+
                         break;
                     case RTCIceConnectionState.Completed:
                     {
