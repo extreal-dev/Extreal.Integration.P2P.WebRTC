@@ -32,6 +32,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// Creates a new peer configuration.
         /// </summary>
         /// <param name="url">URL of the signaling server</param>
+        /// <param name="NegotiationTimeoutSeconds">Timeout value in seconds for the P2P negotiation process.</param>
         /// <param name="socketOptions">Socket options</param>
         /// <param name="iceServerUrls">Ice server URLs</param>
         public PeerConfig(string url, int negotiationTimeoutSeconds, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
