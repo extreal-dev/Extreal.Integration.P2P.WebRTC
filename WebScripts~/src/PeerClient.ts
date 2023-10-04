@@ -260,7 +260,7 @@ class PeerClient {
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
 
-        pc.onicegatheringstatechange = async () => {
+        pc.onicegatheringstatechange = () => {
             if (this.isDebug) {
                 console.log(`Receive ice gathering state change: state=${pc.iceGatheringState} id=${id}`);
             }
