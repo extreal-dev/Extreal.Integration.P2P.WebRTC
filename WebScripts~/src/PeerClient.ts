@@ -227,8 +227,7 @@ class PeerClient {
 
         await this.handlePcAsync("sendOfferAsync", to, async (pc: RTCPeerConnection) => {
             const sd = await pc.createOffer();
-            await pc.setLocalDescription(sd);
-            this.sendSdp(to, pc.localDescription as RTCSessionDescription);
+            pc.setLocalDescription(sd);
         });
     };
 
@@ -260,6 +259,15 @@ class PeerClient {
         }
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
+
+        pc.onicegatheringstatechange = async () => {
+            if (this.isDebug) {
+                console.log(`Receive ice gathering state change: state=${pc.iceGatheringState} id=${id}`);
+            }
+            if (pc.iceGatheringState === "complete") {
+                this.sendSdp(id, pc.localDescription as RTCSessionDescription);
+            }
+        };
 
         pc.oniceconnectionstatechange = () => {
             if (this.isDebug) {
@@ -339,8 +347,7 @@ class PeerClient {
     private sendAnswerAsync = async (from: string) => {
         await this.handlePcAsync("sendAnswerAsync", from, async (pc: RTCPeerConnection) => {
             const sd = await pc.createAnswer();
-            await pc.setLocalDescription(sd);
-            this.sendSdp(from, pc.localDescription as RTCSessionDescription);
+            pc.setLocalDescription(sd);
         });
     };
 
