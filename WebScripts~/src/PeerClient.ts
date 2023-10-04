@@ -281,7 +281,7 @@ class PeerClient {
             if (this.isDebug) {
                 console.log(`Receive ice connection change: state=${pc.iceConnectionState} id=${id}`);
             }
-            await this.waitUntilTimeOut(pc.iceConnectionState);
+            await this.waitUntilTimeOut(pc);
             switch (pc.iceConnectionState) {
                 case "new":
                 case "checking":
@@ -412,12 +412,11 @@ class PeerClient {
         }
     };
 
-    private async waitUntilTimeOut(iceConnectionState: RTCIceConnectionState) {
-        const isNotCheckingOrDisconnected = iceConnectionState !== "checking" && iceConnectionState !== "disconnected";
-        if (isNotCheckingOrDisconnected) {
-            return
-        }
-        await waitUntil(() => isNotCheckingOrDisconnected, this.negotiationCancel(), 300);
+    private async waitUntilTimeOut(pc: RTCPeerConnection) {
+        const isNotCheckingOrDisconnected = () => {
+            return pc.iceConnectionState !== "checking" && pc.iceConnectionState !== "disconnected";
+        };
+        await waitUntil(isNotCheckingOrDisconnected, this.negotiationCancel(), 300);
     }
 
     private negotiationCancel = (): (() => boolean) => {

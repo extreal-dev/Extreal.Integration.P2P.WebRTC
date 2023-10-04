@@ -7,7 +7,7 @@ namespace Extreal.Integration.P2P.WebRTC
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(WebGLPeerConfig));
 
         public WebGLPeerConfig(PeerConfig peerConfig)
-            : base(peerConfig.SignalingUrl, peerConfig.SocketOptions, peerConfig.IceServerUrls)
+            : base(peerConfig.SignalingUrl, peerConfig.NegotiationTimeoutSeconds, peerConfig.SocketOptions, peerConfig.IceServerUrls)
         {
         }
 
