@@ -260,7 +260,7 @@ class PeerClient {
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
         let timerId: number | null = null;
-        
+
         pc.onicegatheringstatechange = () => {
             if (this.isDebug) {
                 console.log(`Receive ice gathering state change: state=${pc.iceGatheringState} id=${id}`);
@@ -273,7 +273,7 @@ class PeerClient {
             if (pc.iceGatheringState === "complete") {
                 timerId === null ? null: window.clearTimeout(timerId);
                 this.sendSdp(id, pc.localDescription as RTCSessionDescription);
-              }
+            }
         };
 
         pc.oniceconnectionstatechange = () => {
