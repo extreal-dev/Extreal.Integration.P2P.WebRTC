@@ -259,14 +259,21 @@ class PeerClient {
         }
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
-
+        let timerId: number | null = null;
+        
         pc.onicegatheringstatechange = () => {
             if (this.isDebug) {
                 console.log(`Receive ice gathering state change: state=${pc.iceGatheringState} id=${id}`);
             }
+
+            if (pc.iceGatheringState === "gathering") {
+                timerId = window.setTimeout(() => this.sendSdp(id, pc.localDescription as RTCSessionDescription), 7000);
+              }
+
             if (pc.iceGatheringState === "complete") {
+                timerId === null ? null: window.clearTimeout(timerId);
                 this.sendSdp(id, pc.localDescription as RTCSessionDescription);
-            }
+              }
         };
 
         pc.oniceconnectionstatechange = () => {
