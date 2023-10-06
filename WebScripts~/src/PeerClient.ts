@@ -286,9 +286,12 @@ class PeerClient {
                 case "new":
                     break;
                 case "checking":{
-                    connectionTimeout = setTimeout(() => {
-                        this.closePc(id);
-                }, this.peerConfig.timeout);
+                    if (this.role === PeerRole.Client) {
+                        connectionTimeout = setTimeout(() => {
+                            this.clientState.fireOnStartFailed();
+                            this.closePc(id);
+                        }, this.peerConfig.timeout);
+                    }
                 break;
                 }
                 case "disconnected": {

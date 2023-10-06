@@ -111,7 +111,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Url = peerConfig.SignalingUrl,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
-                Timeout = peerConfig.Timeout,
+                Timeout = peerConfig.Timeout.Milliseconds,
                 IsDebug = peerConfig.IsDebug
             };
             return JsonSerializer.Serialize(jsonPeerConfig);
@@ -125,7 +125,7 @@ namespace Extreal.Integration.P2P.WebRTC
         public string Url { get; set; }
 
         [JsonPropertyName("timeout")]
-        public TimeSpan Timeout { get; set; }
+        public int Timeout { get; set; }
 
         [JsonPropertyName("socketOptions")]
         public JsonSocketOptions SocketOptions { get; set; }
