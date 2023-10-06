@@ -109,6 +109,7 @@ namespace Extreal.Integration.P2P.WebRTC
             var jsonPeerConfig = new JsonPeerConfig
             {
                 Url = peerConfig.SignalingUrl,
+                NegotiationTimeoutSeconds = peerConfig.NegotiationTimeoutSeconds,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
                 IsDebug = peerConfig.IsDebug
@@ -122,6 +123,9 @@ namespace Extreal.Integration.P2P.WebRTC
     {
         [JsonPropertyName("url")]
         public string Url { get; set; }
+
+        [JsonPropertyName("negotiationTimeoutSeconds")]
+        public int NegotiationTimeoutSeconds { get; set; }
 
         [JsonPropertyName("socketOptions")]
         public JsonSocketOptions SocketOptions { get; set; }
