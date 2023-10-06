@@ -12,7 +12,6 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         {
             var peerConfig = new PeerConfig(
                 "http://127.0.0.1:3010",
-                15,
                 new SocketIOOptions
                 {
                     ConnectionTimeout = TimeSpan.FromSeconds(3),
@@ -25,8 +24,9 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
                     "stun:stun2.l.google.com:19302",
                     "stun:stun3.l.google.com:19302",
                     "stun:stun4.l.google.com:19302",
-                });
-
+                },
+                TimeSpan.FromSeconds(15)
+                );
             var peerClient = PeerClientProvider.Provide(peerConfig);
             builder.RegisterComponent(peerClient);
 

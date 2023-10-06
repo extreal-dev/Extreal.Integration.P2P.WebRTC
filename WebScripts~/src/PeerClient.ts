@@ -31,10 +31,10 @@ type Message = {
 
 type PeerConfig = {
     url: string;
-    negotiationTimeoutSeconds: number; 
     socketOptions: SocketOptions & ManagerOptions;
     pcConfig: RTCConfiguration;
     isDebug: boolean;
+    timeout: number; 
 };
 
 type PeerClientCallbacks = {
@@ -281,16 +281,24 @@ class PeerClient {
             if (this.isDebug) {
                 console.log(`Receive ice connection change: state=${pc.iceConnectionState} id=${id}`);
             }
-            await this.waitUntilTimeOut(pc);
+            let connectionTimeout: ReturnType<typeof setTimeout> | undefined;
             switch (pc.iceConnectionState) {
                 case "new":
-                case "checking":
+                    break;
+                case "checking":{
+                    connectionTimeout = setTimeout(() => {
+                        console.error('Connection Timeout');
+                        this.closePc(id);
+                }, this.peerConfig.timeout);
+                break;
+                }
                 case "disconnected": {
                     // do nothing
                     break;
                 }
                 case "connected":
                 case "completed": {
+                    if (connectionTimeout) clearTimeout(connectionTimeout);
                     if (this.role === PeerRole.Client && this.hostId === id) {
                         this.clientState.finishIceCandidateGathering();
                     }
@@ -423,7 +431,7 @@ class PeerClient {
         const startTime = Date.now();
         return () => {
             const elapsedTime = Date.now() - startTime;
-            const isTimeout = elapsedTime >= this.peerConfig.negotiationTimeoutSeconds * 1000;
+            const isTimeout = elapsedTime >= this.peerConfig.timeout * 1000;
             if (isTimeout) {
                 this.clientState.fireOnStartFailed();
             }

@@ -111,7 +111,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Url = peerConfig.SignalingUrl,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
-                Timeout = peerConfig.timeout,
+                Timeout = peerConfig.Timeout,
                 IsDebug = peerConfig.IsDebug
             };
             return JsonSerializer.Serialize(jsonPeerConfig);
