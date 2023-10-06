@@ -287,7 +287,6 @@ class PeerClient {
                     break;
                 case "checking":{
                     connectionTimeout = setTimeout(() => {
-                        console.error('Connection Timeout');
                         this.closePc(id);
                 }, this.peerConfig.timeout);
                 break;
@@ -419,26 +418,6 @@ class PeerClient {
             this.logError(funcName, e);
         }
     };
-
-    private async waitUntilTimeOut(pc: RTCPeerConnection) {
-        const isNotCheckingOrDisconnected = () => {
-            return pc.iceConnectionState !== "checking" && pc.iceConnectionState !== "disconnected";
-        };
-        await waitUntil(isNotCheckingOrDisconnected, this.negotiationCancel(), 300);
-    }
-
-    private negotiationCancel = (): (() => boolean) => {
-        const startTime = Date.now();
-        return () => {
-            const elapsedTime = Date.now() - startTime;
-            const isTimeout = elapsedTime >= this.peerConfig.timeout * 1000;
-            if (isTimeout) {
-                this.clientState.fireOnStartFailed();
-            }
-            return isTimeout;
-        };
-    };
-    
       
     private logError = (funcName: string, e: unknown) => {
         if (this.isDebug) {

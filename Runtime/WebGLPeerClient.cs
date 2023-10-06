@@ -25,8 +25,8 @@ namespace Extreal.Integration.P2P.WebRTC
             WebGLHelper.CallAction(WithPrefix(nameof(WebGLPeerClient)), ToJson(peerConfig));
             WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnStarted)), HandleOnStarted);
             WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnStartFailed)), HandleOnStartFailed);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleSignalingOnConnectFailed)), HandleSignalingOnConnectFailed);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleSignalingOnDisconnected)), HandleSignalingOnDisconnected);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnSignalingConnectFailed)), HandleOnSignalingConnectFailed);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnSignalingDisconnected)), HandleOnSignalingDisconnected);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveStartHostResponse)), ReceiveStartHostResponse);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveListHostsResponse)), ReceiveListHostsResponse);
         }
@@ -38,11 +38,11 @@ namespace Extreal.Integration.P2P.WebRTC
         private static void HandleOnStartFailed(string unused1, string unused2) => instance.FireOnStartFailed();
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleSignalingOnConnectFailed(string reason, string unused2) =>
+        private static void HandleOnSignalingConnectFailed(string reason, string unused2) =>
             instance.FireOnSignalingConnectFailed(reason);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleSignalingOnDisconnected(string reason, string unused2) => instance.FireOnSignalingDisconnected(reason);
+        private static void HandleOnSignalingDisconnected(string reason, string unused2) => instance.FireOnSignalingDisconnected(reason);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
         private static void ReceiveStartHostResponse(string jsonResponse, string unused)
