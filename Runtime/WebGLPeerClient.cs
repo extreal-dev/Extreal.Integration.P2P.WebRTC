@@ -24,9 +24,9 @@ namespace Extreal.Integration.P2P.WebRTC
             cancellation = new CancellationTokenSource();
             WebGLHelper.CallAction(WithPrefix(nameof(WebGLPeerClient)), ToJson(peerConfig));
             WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnStarted)), HandleOnStarted);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnStartedFailed)), HandleOnStartedFailed);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnConnectFailed)), HandleOnConnectFailed);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnDisconnected)), HandleOnDisconnected);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnStartFailed)), HandleOnStartFailed);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleSignalingOnConnectFailed)), HandleSignalingOnConnectFailed);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleSignalingOnDisconnected)), HandleSignalingOnDisconnected);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveStartHostResponse)), ReceiveStartHostResponse);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveListHostsResponse)), ReceiveListHostsResponse);
         }
@@ -35,14 +35,14 @@ namespace Extreal.Integration.P2P.WebRTC
         private static void HandleOnStarted(string unused1, string unused2) => instance.FireOnStarted();
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleOnStartedFailed(string unused1, string unused2) => instance.FireOnStartedFailed();
+        private static void HandleOnStartFailed(string unused1, string unused2) => instance.FireOnStartFailed();
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleOnConnectFailed(string reason, string unused2) =>
-            instance.FireOnConnectFailed(reason);
+        private static void HandleSignalingOnConnectFailed(string reason, string unused2) =>
+            instance.FireOnSignalingConnectFailed(reason);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleOnDisconnected(string reason, string unused2) => instance.FireOnDisconnected(reason);
+        private static void HandleSignalingOnDisconnected(string reason, string unused2) => instance.FireOnSignalingDisconnected(reason);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
         private static void ReceiveStartHostResponse(string jsonResponse, string unused)
@@ -109,9 +109,9 @@ namespace Extreal.Integration.P2P.WebRTC
             var jsonPeerConfig = new JsonPeerConfig
             {
                 Url = peerConfig.SignalingUrl,
-                NegotiationTimeoutSeconds = peerConfig.NegotiationTimeoutSeconds,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
+                Timeout = peerConfig.timeout,
                 IsDebug = peerConfig.IsDebug
             };
             return JsonSerializer.Serialize(jsonPeerConfig);
@@ -124,8 +124,8 @@ namespace Extreal.Integration.P2P.WebRTC
         [JsonPropertyName("url")]
         public string Url { get; set; }
 
-        [JsonPropertyName("negotiationTimeoutSeconds")]
-        public int NegotiationTimeoutSeconds { get; set; }
+        [JsonPropertyName("timeout")]
+        public TimeSpan Timeout { get; set; }
 
         [JsonPropertyName("socketOptions")]
         public JsonSocketOptions SocketOptions { get; set; }

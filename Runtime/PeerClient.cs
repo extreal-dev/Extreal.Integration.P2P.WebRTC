@@ -22,22 +22,22 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
         /// <summary>
-        /// Invokes immediately after the host or client starts failed.
+        /// Invokes immediately after the host or client has failed to start.
         /// </summary>
-        public IObservable<Unit> OnStartedFailed => onStartedFailed.AddTo(Disposables);
-        private readonly Subject<Unit> onStartedFailed = new Subject<Unit>();
+        public IObservable<Unit> OnStartFailed => onStartFailed.AddTo(Disposables);
+        private readonly Subject<Unit> onStartFailed = new Subject<Unit>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to connect to the signaling server.
         /// </summary>
-        public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
-        private readonly Subject<string> onConnectFailed = new Subject<string>();
+        public IObservable<string> OnSignalingConnectFailed => onSignalingConnectFailed.AddTo(Disposables);
+        private readonly Subject<string> onSignalingConnectFailed = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after a host or client connected to the signaling server is disconnected.
         /// </summary>
-        public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
-        private readonly Subject<string> onDisconnected = new Subject<string>();
+        public IObservable<string> OnSignalingDisconnected => onSignalingDisconnected.AddTo(Disposables);
+        private readonly Subject<string> onSignalingDisconnected = new Subject<string>();
 
         /// <summary>
         /// Whether it is running or not.
@@ -68,9 +68,9 @@ namespace Extreal.Integration.P2P.WebRTC
         }
 
         /// <summary>
-        /// Fires the OnStartedFailed.
+        /// Fires the OnStartFailed.
         /// </summary>
-        protected void FireOnStartedFailed()
+        protected void FireOnStartFailed()
         {
             if (IsRunning)
             {
@@ -82,38 +82,38 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started failed");
             }
             IsRunning = false;
-            onStartedFailed.OnNext(Unit.Default);
+            onStartFailed.OnNext(Unit.Default);
         }
 
         /// <summary>
-        /// Fires the OnConnectFailed.
+        /// Fires the OnSignalingConnectFailed.
         /// </summary>
         /// <param name="reason">Reason</param>
-        protected void FireOnConnectFailed(string reason)
+        protected void FireOnSignalingConnectFailed(string reason)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"{nameof(FireOnConnectFailed)}: reason={reason}");
+                Logger.LogDebug($"{nameof(FireOnSignalingConnectFailed)}: reason={reason}");
             }
-            onConnectFailed.OnNext(reason);
+            onSignalingConnectFailed.OnNext(reason);
         }
 
         /// <summary>
-        /// Fires the OnDisconnected.
+        /// Fires the OnSignalingDisconnected.
         /// </summary>
         /// <param name="reason">Reason</param>
-        protected void FireOnDisconnected(string reason)
+        protected void FireOnSignalingDisconnected(string reason)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"{nameof(FireOnDisconnected)}: reason={reason}");
+                Logger.LogDebug($"{nameof(FireOnSignalingDisconnected)}: reason={reason}");
             }
             if (reason == "io client disconnect")
             {
                 // Not covered by testing due to defensive implementation
                 return;
             }
-            onDisconnected.OnNext(reason);
+            onSignalingDisconnected.OnNext(reason);
         }
 
         /// <inheritdoc/>

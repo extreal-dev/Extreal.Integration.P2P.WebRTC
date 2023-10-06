@@ -109,7 +109,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             catch (ConnectionException e)
             {
-                FireOnConnectFailed(e.Message);
+                FireOnSignalingConnectFailed(e.Message);
                 throw;
             }
 
@@ -205,7 +205,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug($"{nameof(ReceiveDisconnectedAsync)}: {reason}");
             }
             await UniTask.SwitchToMainThread();
-            FireOnDisconnected(reason);
+            FireOnSignalingDisconnected(reason);
         }
 
         protected override async UniTask<StartHostResponse> DoStartHostAsync(string name)

@@ -16,13 +16,12 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <param name="peerConfig">Peer configuration</param>
         /// <returns>PeerClient</returns>
         [SuppressMessage("Style", "CC0038")]
-        public static PeerClient Provide(PeerConfig peerConfig)
-        {
+        public static PeerClient Provide(PeerConfig peerConfig) =>
 #if !UNITY_WEBGL || UNITY_EDITOR
-            return new NativePeerClient(peerConfig);
+            new NativePeerClient(peerConfig);
 #else
-            return new WebGLPeerClient(new WebGLPeerConfig(peerConfig));
+            new WebGLPeerClient(new WebGLPeerConfig(peerConfig));
 #endif
-        }
+
     }
 }

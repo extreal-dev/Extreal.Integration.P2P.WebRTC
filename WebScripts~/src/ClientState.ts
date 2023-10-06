@@ -1,15 +1,15 @@
 type OnStarted = () => void;
-type OnStartedFailed = () => void;
+type OnStartFailed = () => void;
 
 class ClientState {
     private readonly onStarted: OnStarted;
-    private readonly onStartedFailed: OnStartedFailed;
+    private readonly onStartFailed: OnStartFailed;
     private isIceCandidateGatheringFinished: boolean;
     private isOfferAnswerProcessFinished: boolean;
 
-    constructor(onStarted: OnStarted, onStartedFailed: OnStartedFailed) {
+    constructor(onStarted: OnStarted, onStartFailed: OnStartFailed) {
         this.onStarted = onStarted;
-        this.onStartedFailed = onStartedFailed;
+        this.onStartFailed = onStartFailed;
         this.isIceCandidateGatheringFinished = false;
         this.isOfferAnswerProcessFinished = false;
     }
@@ -30,8 +30,8 @@ class ClientState {
         }
     };
 
-    public fireOnStartedFailed = () => {
-            this.onStartedFailed();
+    public fireOnStartFailed = () => {
+            this.onStartFailed();
     };
 
     public clear = () => {
@@ -41,4 +41,4 @@ class ClientState {
 }
 
 export type { OnStarted };
-export { ClientState, OnStartedFailed };
+export { ClientState, OnStartFailed };

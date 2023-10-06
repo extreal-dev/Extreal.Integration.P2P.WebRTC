@@ -1,5 +1,5 @@
 import { io, Socket, SocketOptions, ManagerOptions } from "socket.io-client";
-import { ClientState, OnStarted, OnStartedFailed } from "./ClientState";
+import { ClientState, OnStarted, OnStartFailed } from "./ClientState";
 import { PeerRole } from "./PeerRole";
 import { isAsync, waitUntil } from "@extreal-dev/extreal.integration.web.common";
 
@@ -39,9 +39,9 @@ type PeerConfig = {
 
 type PeerClientCallbacks = {
     onStarted: OnStarted;
-    onStartedFailed: OnStartedFailed;
-    onConnectFailed: (reason: string) => void;
-    onDisconnected: (reason: string) => void;
+    onStartFailed: OnStartFailed;
+    onSignalingConnectFailed: (reason: string) => void;
+    onSignalingDisconnected: (reason: string) => void;
 };
 
 /**
@@ -69,7 +69,7 @@ class PeerClient {
         this.pcMap = new Map();
         this.pcCreateHooks = [];
         this.pcCloseHooks = [];
-        this.clientState = new ClientState(callbacks.onStarted, callbacks.onStartedFailed);
+        this.clientState = new ClientState(callbacks.onStarted, callbacks.onStartFailed);
         this.callbacks = callbacks;
         this.role = PeerRole.None;
         this.hostId = null;
@@ -186,14 +186,14 @@ class PeerClient {
         if (this.isDebug) {
             console.log(error.message);
         }
-        this.callbacks.onConnectFailed(error.message);
+        this.callbacks.onSignalingConnectFailed(error.message);
     };
 
     private receiveDisconnect = (reason: string) => {
         if (this.isDebug) {
             console.log(reason);
         }
-        this.callbacks.onDisconnected(reason);
+        this.callbacks.onSignalingDisconnected(reason);
     };
 
     public startHost = (name: string, handle: (response: StartHostResponse) => void) => {
@@ -299,7 +299,7 @@ class PeerClient {
                 case "failed":
                 case "closed": {
                     if (this.role === PeerRole.Client) {
-                        this.clientState.fireOnStartedFailed();
+                        this.clientState.fireOnStartFailed();
                     }
                     this.closePc(id);
                     break;
@@ -425,7 +425,7 @@ class PeerClient {
             const elapsedTime = Date.now() - startTime;
             const isTimeout = elapsedTime >= this.peerConfig.negotiationTimeoutSeconds * 1000;
             if (isTimeout) {
-                this.clientState.fireOnStartedFailed();
+                this.clientState.fireOnStartFailed();
             }
             return isTimeout;
         };
