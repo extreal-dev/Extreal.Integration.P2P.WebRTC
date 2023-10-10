@@ -37,7 +37,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <param name="iceServerUrls">Ice server URLs</param>
         /// <param name="timeout">
         /// <para>Time to wait when P2P starting is not successful</para>
-        /// Default: 10 seconds
+        /// Default: 15 seconds
         /// </param>
         public PeerConfig(string url, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null, TimeSpan timeout = default)
         {

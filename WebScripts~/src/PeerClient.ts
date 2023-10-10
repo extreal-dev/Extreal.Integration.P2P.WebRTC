@@ -277,7 +277,7 @@ class PeerClient {
             this.sendIce(id, event.candidate);
         };
 
-        pc.oniceconnectionstatechange = async () => {
+        pc.oniceconnectionstatechange = () => {
             if (this.isDebug) {
                 console.log(`Receive ice connection change: state=${pc.iceConnectionState} id=${id}`);
             }
