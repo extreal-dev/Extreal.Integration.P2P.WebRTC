@@ -285,7 +285,7 @@ class PeerClient {
             switch (pc.iceConnectionState) {
                 case "new":
                 case "checking": {
-                    if (this.role === PeerRole.Client) {
+                    if (!connectionTimeout && this.role === PeerRole.Client) {
                         connectionTimeout = setTimeout(() => {
                             this.clientState.fireOnStartFailed();
                             this.closePc(id);
