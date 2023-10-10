@@ -284,7 +284,6 @@ class PeerClient {
             let connectionTimeout: ReturnType<typeof setTimeout> | undefined;
             switch (pc.iceConnectionState) {
                 case "new":
-                    break;
                 case "checking": {
                     if (this.role === PeerRole.Client) {
                         connectionTimeout = setTimeout(() => {
