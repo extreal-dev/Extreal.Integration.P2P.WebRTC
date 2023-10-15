@@ -60,7 +60,10 @@ namespace Extreal.Integration.P2P.WebRTC
             this.peerConfig = peerConfig;
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"signaling url={peerConfig.SignalingUrl} socket connection timeout={peerConfig.SocketOptions.ConnectionTimeout} P2P timeout={peerConfig.P2PTimeout}");
+                Logger.LogDebug($"signaling url={peerConfig.SignalingUrl} "
+                                + $"socket connection timeout={peerConfig.SocketOptions.ConnectionTimeout} "
+                                + $"P2P timeout={peerConfig.P2PTimeout} "
+                                + $"Vanilla ICE timeout={peerConfig.VanillaIceTimeout}");
             }
         }
 

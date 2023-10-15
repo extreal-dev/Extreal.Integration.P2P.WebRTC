@@ -30,25 +30,36 @@ namespace Extreal.Integration.P2P.WebRTC
         public TimeSpan P2PTimeout { get; internal set; }
 
         /// <summary>
+        /// Timeout used vanilla ICE.
+        /// </summary>
+        public TimeSpan VanillaIceTimeout { get; internal set; }
+
+        /// <summary>
         /// Creates a new peer configuration.
         /// </summary>
         /// <param name="url">URL of the signaling server</param>
         /// <param name="socketOptions">Socket options</param>
         /// <param name="iceServerConfigs">Ice server configurations</param>
-        /// <param name="p2pTimeout">
+        /// <param name="p2PTimeout">
         /// <para>Timeout used to detect P2P start failure</para>
-        /// Default: 10 seconds
+        /// Default: 15 seconds
+        /// </param>
+        /// <param name="vanillaIceTimeout">
+        /// <para>Timeout used vanilla ICE</para>
+        /// Default: 5 seconds
         /// </param>
         public PeerConfig(
             string url,
             SocketIOOptions socketOptions = null,
             List<IceServerConfig> iceServerConfigs = null,
-            TimeSpan p2pTimeout = default)
+            TimeSpan p2PTimeout = default,
+            TimeSpan vanillaIceTimeout = default)
         {
             SignalingUrl = url;
             SocketOptions = socketOptions ?? new SocketIOOptions();
             IceServerConfigs = iceServerConfigs ?? new List<IceServerConfig>();
-            P2PTimeout = p2pTimeout == default ? TimeSpan.FromSeconds(10) : p2pTimeout;
+            P2PTimeout = p2PTimeout == default ? TimeSpan.FromSeconds(15) : p2PTimeout;
+            VanillaIceTimeout = vanillaIceTimeout == default ? TimeSpan.FromSeconds(5) : vanillaIceTimeout;
         }
     }
 
