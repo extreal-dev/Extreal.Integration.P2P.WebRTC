@@ -13,7 +13,7 @@
    $ yarn
    $ yarn dev
    ```
-   The JavaScript code will be built and output to `/Assets/WebTemplates/Dev`.
+   The JavaScript code will be built and output to `/Assets/WebGLTemplates/Dev`.
 - Open `Build Settings` and change the platform to `WebGL`.
 - Select `Dev` from `Player Settings > Resolution and Presentation > WebGL Template`.
 - Add all scenes in MVS to `Scenes In Build`.
