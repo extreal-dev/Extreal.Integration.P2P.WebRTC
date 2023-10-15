@@ -364,7 +364,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     case RTCIceConnectionState.Connected:
                     case RTCIceConnectionState.Completed:
                     {
-                        if (Role == PeerRole.Client)
+                        if (Role == PeerRole.Client && id == HostId)
                         {
                             clientState.FinishIceCandidateGathering();
                         }

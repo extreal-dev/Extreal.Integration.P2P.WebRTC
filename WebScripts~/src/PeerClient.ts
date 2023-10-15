@@ -288,7 +288,7 @@ class PeerClient {
                 }
                 case "connected":
                 case "completed": {
-                    if (this.role === PeerRole.Client) {
+                    if (this.role === PeerRole.Client && id === this.hostId) {
                         this.clientState.finishIceCandidateGathering();
                     }
                     break;
