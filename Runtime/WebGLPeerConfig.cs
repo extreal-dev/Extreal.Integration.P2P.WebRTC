@@ -1,4 +1,5 @@
-﻿using Extreal.Core.Logging;
+﻿#if UNITY_WEBGL
+using Extreal.Core.Logging;
 
 namespace Extreal.Integration.P2P.WebRTC
 {
@@ -7,10 +8,11 @@ namespace Extreal.Integration.P2P.WebRTC
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(WebGLPeerConfig));
 
         public WebGLPeerConfig(PeerConfig peerConfig)
-            : base(peerConfig.SignalingUrl, peerConfig.SocketOptions, peerConfig.IceServerUrls)
+            : base(peerConfig.SignalingUrl, peerConfig.SocketOptions, peerConfig.IceServerConfigs)
         {
         }
 
         public bool IsDebug => Logger.IsDebug();
     }
 }
+#endif

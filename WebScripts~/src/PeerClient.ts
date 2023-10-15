@@ -25,7 +25,6 @@ type Message = {
     from?: string;
     to?: string;
     sdp?: string;
-    ice?: RTCIceCandidate;
     me?: string;
 };
 
@@ -33,6 +32,7 @@ type PeerConfig = {
     url: string;
     socketOptions: SocketOptions & ManagerOptions;
     pcConfig: RTCConfiguration;
+    vanillaIceTimeout: number;
     isDebug: boolean;
 };
 
@@ -142,10 +142,6 @@ class PeerClient {
                 this.receiveDone(from);
                 break;
             }
-            case "candidate": {
-                await this.receiveCandidate(from, new RTCIceCandidate(message.ice));
-                break;
-            }
             case "bye": {
                 this.receiveBye(from);
                 break;
@@ -232,7 +228,7 @@ class PeerClient {
         await this.handlePcAsync("sendOfferAsync", to, async (pc: RTCPeerConnection) => {
             const sd = await pc.createOffer();
             await pc.setLocalDescription(sd);
-            this.sendSdp(to, pc.localDescription as RTCSessionDescription);
+            this.sendSdpByCompleteOrTimeoutAsync(to, pc);
         });
     };
 
@@ -265,16 +261,6 @@ class PeerClient {
 
         const pc = new RTCPeerConnection(this.peerConfig.pcConfig);
 
-        pc.onicecandidate = (event) => {
-            if (!event.candidate) {
-                return;
-            }
-            if (this.isDebug) {
-                console.log(`Receive ice candidate: state=${event.candidate} id=${id}`);
-            }
-            this.sendIce(id, event.candidate);
-        };
-
         pc.oniceconnectionstatechange = () => {
             if (this.isDebug) {
                 console.log(`Receive ice connection change: state=${pc.iceConnectionState} id=${id}`);
@@ -288,7 +274,7 @@ class PeerClient {
                 }
                 case "connected":
                 case "completed": {
-                    if (this.role === PeerRole.Client) {
+                    if (this.role === PeerRole.Client && id === this.hostId) {
                         this.clientState.finishIceCandidateGathering();
                     }
                     break;
@@ -311,6 +297,22 @@ class PeerClient {
         this.pcMap.set(id, pc);
     };
 
+    private sendSdpByCompleteOrTimeoutAsync = async (to: string, pc: RTCPeerConnection) => {
+        let isTimeout = false;
+        const condition = () => pc.iceGatheringState === "complete";
+        const startTime = Date.now();
+        const cancel = () => {
+            isTimeout = (Date.now() - startTime) > this.peerConfig.vanillaIceTimeout;
+            return isTimeout;
+        };
+        await waitUntil(condition, cancel);
+        if (this.isDebug) {
+            const result = isTimeout ? "timeout" : "complete";
+            console.log(`Vanilla ICE gathering: ${result} id=${to}`);
+        }
+        this.sendSdp(to, pc.localDescription as RTCSessionDescription);
+    };
+
     private closePc = (from: string) => {
         this.handlePc("closePc", from, (pc: RTCPeerConnection) => {
             this.pcCloseHooks.forEach((hook) => hook(from));
@@ -321,10 +323,6 @@ class PeerClient {
 
     private sendSdp = (to: string, sd: RTCSessionDescription) => {
         this.sendMessage(to, { type: sd.type, sdp: sd.sdp });
-    };
-
-    private sendIce = (to: string, candidate: RTCIceCandidate) => {
-        this.handlePc("sendIce", to, () => this.sendMessage(to, { type: "candidate", ice: candidate }));
     };
 
     private sendMessage = (to: string, message: Message) => {
@@ -358,7 +356,7 @@ class PeerClient {
         await this.handlePcAsync("sendAnswerAsync", from, async (pc: RTCPeerConnection) => {
             const sd = await pc.createAnswer();
             await pc.setLocalDescription(sd);
-            this.sendSdp(from, pc.localDescription as RTCSessionDescription);
+            this.sendSdpByCompleteOrTimeoutAsync(from, pc);
         });
     };
 
@@ -373,11 +371,6 @@ class PeerClient {
         if (this.role === PeerRole.Client && from === this.hostId) {
             this.clientState.finishOfferAnswerProcess();
         }
-    };
-
-    private receiveCandidate = async (from: string, candidate: RTCIceCandidate) => {
-        await waitUntil(() => this.pcMap.has(from), () => false, 300);
-        this.handlePc("receiveCandidate", from, (pc: RTCPeerConnection) => pc.addIceCandidate(candidate));
     };
 
     private receiveBye = (from: string) => this.closePc(from);

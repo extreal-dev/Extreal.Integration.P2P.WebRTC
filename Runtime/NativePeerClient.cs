@@ -35,7 +35,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </summary>
         public string HostId { get; private set; }
 
-        public NativePeerClient(PeerConfig peerConfig)
+        public NativePeerClient(PeerConfig peerConfig) : base(peerConfig)
         {
             this.peerConfig = peerConfig;
             pcConfig = ToPcConfig(peerConfig);
@@ -49,19 +49,31 @@ namespace Extreal.Integration.P2P.WebRTC
             clientState.OnStarted.Subscribe(_ => FireOnStarted()).AddTo(Disposables);
 
             Role = PeerRole.None;
+
+            LogIceServers(pcConfig);
+        }
+
+        private static void LogIceServers(RTCConfiguration pcConfig)
+        {
+            if (Logger.IsDebug())
+            {
+                foreach (var iceServer in pcConfig.iceServers)
+                {
+                    Logger.LogDebug($"Ice server: urls={string.Join(", ", iceServer.urls)} username={iceServer.username} credential={iceServer.credential}");
+                }
+            }
         }
 
         private static RTCConfiguration ToPcConfig(PeerConfig peerConfig)
-            => peerConfig.IceServerUrls.Count > 0
+            => peerConfig.IceServerConfigs.Count > 0
                 ? new RTCConfiguration
                 {
-                    iceServers = new RTCIceServer[]
+                    iceServers = peerConfig.IceServerConfigs.Select(iceServerConfig => new RTCIceServer
                     {
-                        new RTCIceServer
-                        {
-                            urls = peerConfig.IceServerUrls.ToArray()
-                        }
-                    }
+                        urls = iceServerConfig.Urls.ToArray(),
+                        username = iceServerConfig.Username,
+                        credential = iceServerConfig.Credential
+                    }).ToArray()
                 }
                 : new RTCConfiguration();
 
@@ -159,13 +171,6 @@ namespace Extreal.Integration.P2P.WebRTC
                 case "done":
                 {
                     ReceiveDone(message.From);
-                    break;
-                }
-                case "candidate":
-                {
-#pragma warning disable CC0022
-                    ReceiveCandidate(message.From, new RTCIceCandidate(message.Ice.ToInit()));
-#pragma warning restore CC0022
                     break;
                 }
                 case "bye":
@@ -272,7 +277,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     await offerAsyncOp;
                     var sd = offerAsyncOp.Desc;
                     await pc.SetLocalDescription(ref sd);
-                    await SendSdpAsync(to, pc.LocalDescription);
+                    SendSdpByCompleteOrTimeoutAsync(to, pc).Forget();
                 });
         }
 
@@ -319,20 +324,6 @@ namespace Extreal.Integration.P2P.WebRTC
 
             var pc = new RTCPeerConnection(ref pcConfig);
 
-            pc.OnIceCandidate += async e =>
-            {
-                if (string.IsNullOrEmpty(e.Candidate))
-                {
-                    // Not covered by testing due to defensive implementation
-                    return;
-                }
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug($"Receive ice candidate: state={e.Candidate} id={id}");
-                }
-                await SendIceAsync(id, e);
-            };
-
             pc.OnIceConnectionChange += _ =>
             {
                 if (Logger.IsDebug())
@@ -352,7 +343,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     case RTCIceConnectionState.Connected:
                     case RTCIceConnectionState.Completed:
                     {
-                        if (Role == PeerRole.Client)
+                        if (Role == PeerRole.Client && id == HostId)
                         {
                             clientState.FinishIceCandidateGathering();
                         }
@@ -377,6 +368,27 @@ namespace Extreal.Integration.P2P.WebRTC
             pcDict.Add(id, pc);
         }
 
+        private async UniTask SendSdpByCompleteOrTimeoutAsync(string to, RTCPeerConnection pc)
+        {
+            var isTimeout = false;
+            try
+            {
+                await UniTask
+                    .WaitUntil(() => pc.GatheringState == RTCIceGatheringState.Complete)
+                    .Timeout(peerConfig.VanillaIceTimeout);
+            }
+            catch (TimeoutException)
+            {
+                isTimeout = true;
+            }
+            if (Logger.IsDebug())
+            {
+                var result = isTimeout ? "timeout" : "complete";
+                Logger.LogDebug($"Vanilla ICE gathering: {result} id={to}");
+            }
+            SendSdpAsync(to, pc.LocalDescription).Forget();
+        }
+
         private void ClosePc(string from)
             => HandlePc(
                 nameof(ClosePc),
@@ -394,22 +406,6 @@ namespace Extreal.Integration.P2P.WebRTC
                 Type = sd.type.ToString().ToLower(),
                 Sdp = sd.sdp,
             });
-
-        private UniTask SendIceAsync(string to, RTCIceCandidate ice)
-            => HandlePcAsync(
-                nameof(SendIceAsync),
-                to,
-                _ => SendMessageAsync(to,
-                    new Message
-                    {
-                        Type = "candidate",
-                        Ice = new Ice
-                        {
-                            Candidate = ice.Candidate,
-                            SdpMid = ice.SdpMid,
-                            SdpMLineIndex = ice.SdpMLineIndex
-                        }
-                    }));
 
         [SuppressMessage("Design", "CC0021")]
         private async UniTask SendMessageAsync(string to, Message message)
@@ -459,7 +455,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     await answerAsyncOp;
                     var sd = answerAsyncOp.Desc;
                     await pc.SetLocalDescription(ref sd);
-                    await SendSdpAsync(from, pc.LocalDescription);
+                    SendSdpByCompleteOrTimeoutAsync(from, pc).Forget();
                 });
 
         private UniTask ReceiveAnswerAsync(string from, RTCSessionDescription sd)
@@ -479,12 +475,6 @@ namespace Extreal.Integration.P2P.WebRTC
                 clientState.FinishOfferAnswerProcess();
             }
         }
-
-        private void ReceiveCandidate(string from, RTCIceCandidate candidate)
-            => HandlePc(
-                nameof(ReceiveCandidate),
-                from,
-                pc => pc.AddIceCandidate(candidate));
 
         private void ReceiveBye(string from) => ClosePc(from);
 
@@ -557,9 +547,6 @@ namespace Extreal.Integration.P2P.WebRTC
         [JsonPropertyName("sdp")]
         public string? Sdp { get; set; }
 
-        [JsonPropertyName("ice")]
-        public Ice? Ice { get; set; }
-
 #pragma warning restore CS8632
 
         private static readonly Dictionary<string, RTCSdpType> TypeMapping
@@ -578,32 +565,7 @@ namespace Extreal.Integration.P2P.WebRTC
 
         public override string ToString()
             => $"{nameof(Type)}: {Type}, {nameof(From)}: {From}, {nameof(To)}: {To}, "
-               + $"{nameof(Me)}: {Me}, {nameof(Sdp)}: {Sdp}, {nameof(Ice)}: {Ice}";
-    }
-
-    [SuppressMessage("Usage", "CC0047")]
-    public class Ice
-    {
-        [JsonPropertyName("candidate")]
-        public string Candidate { get; set; }
-
-        [JsonPropertyName("sdpMid")]
-        public string SdpMid { get; set; }
-
-        [JsonPropertyName("sdpMLineIndex")]
-        public int? SdpMLineIndex { get; set; }
-
-        public RTCIceCandidateInit ToInit()
-            => new RTCIceCandidateInit
-            {
-                candidate = Candidate,
-                sdpMid = SdpMid,
-                sdpMLineIndex = SdpMLineIndex,
-            };
-
-        public override string ToString()
-            => $"{nameof(Candidate)}: {Candidate}, {nameof(SdpMid)}: {SdpMid}, "
-               + $"{nameof(SdpMLineIndex)}: {SdpMLineIndex}";
+               + $"{nameof(Me)}: {Me}, {nameof(Sdp)}: {Sdp}";
     }
 
     [SuppressMessage("Usage", "CC0047")]

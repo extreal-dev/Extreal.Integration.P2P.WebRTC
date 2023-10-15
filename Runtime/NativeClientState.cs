@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UNITY_WEBGL || UNITY_EDITOR
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.Common.System;
@@ -39,3 +40,4 @@ namespace Extreal.Integration.P2P.WebRTC
         protected override void ReleaseManagedResources() => disposables.Dispose();
     }
 }
+#endif
