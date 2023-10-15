@@ -57,9 +57,16 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             if (Logger.IsDebug())
             {
-                foreach (var iceServer in pcConfig.iceServers)
+                if (pcConfig.iceServers is null)
                 {
-                    Logger.LogDebug($"Ice server: urls={string.Join(", ", iceServer.urls)} username={iceServer.username} credential={iceServer.credential}");
+                    Logger.LogDebug("Ice server: None");
+                }
+                else
+                {
+                    foreach (var iceServer in pcConfig.iceServers)
+                    {
+                        Logger.LogDebug($"Ice server: urls={string.Join(", ", iceServer.urls)} username={iceServer.username} credential={iceServer.credential}");
+                    }
                 }
             }
         }
