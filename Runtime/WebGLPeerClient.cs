@@ -1,7 +1,7 @@
 ﻿#if UNITY_WEBGL
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -89,11 +89,13 @@ namespace Extreal.Integration.P2P.WebRTC
         {
             var jsonRtcConfiguration = new JsonRtcConfiguration
             {
-                IceServers = peerConfig.IceServerUrls.Count > 0
-                    ? new List<JsonRtcIceServer>
+                IceServers = peerConfig.IceServerConfigs.Count > 0
+                    ? peerConfig.IceServerConfigs.Select(iceServerConfig => new JsonRtcIceServer
                     {
-                        new JsonRtcIceServer { Urls = peerConfig.IceServerUrls.ToArray() },
-                    }.ToArray()
+                        Urls = iceServerConfig.Urls.ToArray(),
+                        Username = iceServerConfig.Username,
+                        Credential = iceServerConfig.Credential
+                    }).ToArray()
                     : Array.Empty<JsonRtcIceServer>()
             };
             var socketOptions = peerConfig.SocketOptions;
@@ -151,6 +153,12 @@ namespace Extreal.Integration.P2P.WebRTC
     {
         [JsonPropertyName("urls")]
         public string[] Urls { get; set; }
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
+
+        [JsonPropertyName("credential")]
+        public string Credential { get; set; }
     }
 }
 #endif

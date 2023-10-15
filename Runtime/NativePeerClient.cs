@@ -49,19 +49,31 @@ namespace Extreal.Integration.P2P.WebRTC
             clientState.OnStarted.Subscribe(_ => FireOnStarted()).AddTo(Disposables);
 
             Role = PeerRole.None;
+
+            LogIceServers(pcConfig);
+        }
+
+        private static void LogIceServers(RTCConfiguration pcConfig)
+        {
+            if (Logger.IsDebug())
+            {
+                foreach (var iceServer in pcConfig.iceServers)
+                {
+                    Logger.LogDebug($"Ice server: urls={string.Join(", ", iceServer.urls)} username={iceServer.username} credential={iceServer.credential}");
+                }
+            }
         }
 
         private static RTCConfiguration ToPcConfig(PeerConfig peerConfig)
-            => peerConfig.IceServerUrls.Count > 0
+            => peerConfig.IceServerConfigs.Count > 0
                 ? new RTCConfiguration
                 {
-                    iceServers = new RTCIceServer[]
+                    iceServers = peerConfig.IceServerConfigs.Select(iceServerConfig => new RTCIceServer
                     {
-                        new RTCIceServer
-                        {
-                            urls = peerConfig.IceServerUrls.ToArray()
-                        }
-                    }
+                        urls = iceServerConfig.Urls.ToArray(),
+                        username = iceServerConfig.Username,
+                        credential = iceServerConfig.Credential
+                    }).ToArray()
                 }
                 : new RTCConfiguration();
 
