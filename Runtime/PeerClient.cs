@@ -22,6 +22,12 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
         /// <summary>
+        /// Invokes immediately after the host or client has failed to start.
+        /// </summary>
+        public IObservable<Unit> OnStartFailed => onStartFailed.AddTo(Disposables);
+        private readonly Subject<Unit> onStartFailed = new Subject<Unit>();
+
+        /// <summary>
         /// Invokes immediately after the host or client has failed to connect to the signaling server.
         /// </summary>
         public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
@@ -42,6 +48,21 @@ namespace Extreal.Integration.P2P.WebRTC
         /// Disposables.
         /// </summary>
         protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
+
+        private readonly PeerConfig peerConfig;
+
+        /// <summary>
+        /// Creates a new peer client.
+        /// </summary>
+        /// <param name="peerConfig">peer configuration</param>
+        protected PeerClient(PeerConfig peerConfig)
+        {
+            this.peerConfig = peerConfig;
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"signaling url={peerConfig.SignalingUrl} socket connection timeout={peerConfig.SocketOptions.ConnectionTimeout} P2P timeout={peerConfig.P2PTimeout}");
+            }
+        }
 
         /// <summary>
         /// Fires the OnStarted.
@@ -115,6 +136,8 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 Logger.LogDebug($"Start host: name={name}");
             }
+            MonitorToStartAsync().Forget();
+
             var startHostResponse = await DoStartHostAsync(name);
             if (startHostResponse.Status == 409)
             {
@@ -164,6 +187,7 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 Logger.LogDebug($"Start client: hostId={hostId}");
             }
+            MonitorToStartAsync().Forget();
             return DoStartClientAsync(hostId);
         }
 
@@ -173,6 +197,23 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <param name="hostId">Host id to join</param>
         /// <returns>UniTask</returns>
         protected abstract UniTask DoStartClientAsync(string hostId);
+
+        private async UniTask MonitorToStartAsync()
+        {
+            try
+            {
+                await UniTask.WaitUntil(() => IsRunning).Timeout(peerConfig.P2PTimeout);
+            }
+            catch (TimeoutException)
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug("P2P start processing timed out");
+                }
+                Stop();
+                onStartFailed.OnNext(Unit.Default);
+            }
+        }
 
         /// <summary>
         /// Stops the connection.

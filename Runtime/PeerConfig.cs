@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SocketIOClient;
 
 namespace Extreal.Integration.P2P.WebRTC
@@ -24,16 +25,30 @@ namespace Extreal.Integration.P2P.WebRTC
         public List<IceServerConfig> IceServerConfigs { get; }
 
         /// <summary>
+        /// Timeout used to detect P2P start failure.
+        /// </summary>
+        public TimeSpan P2PTimeout { get; internal set; }
+
+        /// <summary>
         /// Creates a new peer configuration.
         /// </summary>
         /// <param name="url">URL of the signaling server</param>
         /// <param name="socketOptions">Socket options</param>
         /// <param name="iceServerConfigs">Ice server configurations</param>
-        public PeerConfig(string url, SocketIOOptions socketOptions = null, List<IceServerConfig> iceServerConfigs = null)
+        /// <param name="p2pTimeout">
+        /// <para>Timeout used to detect P2P start failure</para>
+        /// Default: 10 seconds
+        /// </param>
+        public PeerConfig(
+            string url,
+            SocketIOOptions socketOptions = null,
+            List<IceServerConfig> iceServerConfigs = null,
+            TimeSpan p2pTimeout = default)
         {
             SignalingUrl = url;
             SocketOptions = socketOptions ?? new SocketIOOptions();
             IceServerConfigs = iceServerConfigs ?? new List<IceServerConfig>();
+            P2PTimeout = p2pTimeout == default ? TimeSpan.FromSeconds(10) : p2pTimeout;
         }
     }
 

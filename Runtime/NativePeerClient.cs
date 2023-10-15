@@ -35,7 +35,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </summary>
         public string HostId { get; private set; }
 
-        public NativePeerClient(PeerConfig peerConfig)
+        public NativePeerClient(PeerConfig peerConfig) : base(peerConfig)
         {
             this.peerConfig = peerConfig;
             pcConfig = ToPcConfig(peerConfig);

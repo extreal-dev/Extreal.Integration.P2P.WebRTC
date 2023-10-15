@@ -18,7 +18,7 @@ namespace Extreal.Integration.P2P.WebRTC
         private ListHostsResponse listHostsResponse;
         private CancellationTokenSource cancellation;
 
-        public WebGLPeerClient(WebGLPeerConfig peerConfig)
+        public WebGLPeerClient(WebGLPeerConfig peerConfig) : base(peerConfig)
         {
             instance = this;
             cancellation = new CancellationTokenSource();
