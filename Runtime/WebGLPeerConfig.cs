@@ -1,4 +1,5 @@
-﻿using Extreal.Core.Logging;
+﻿#if UNITY_WEBGL
+using Extreal.Core.Logging;
 
 namespace Extreal.Integration.P2P.WebRTC
 {
@@ -14,3 +15,4 @@ namespace Extreal.Integration.P2P.WebRTC
         public bool IsDebug => Logger.IsDebug();
     }
 }
+#endif
