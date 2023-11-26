@@ -371,8 +371,20 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             };
 
-            pcCreateHooks.ForEach(hook => hook.Invoke(id, isOffer, pc));
+            pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc),() => hook.Invoke(id, isOffer, pc)));
             pcDict.Add(id, pc);
+        }
+
+        private static void HandleHook(string name, Action hook)
+        {
+            try
+            {
+                hook.Invoke();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Error has occured at {name}", e);
+            }
         }
 
         private async UniTask SendSdpByCompleteOrTimeoutAsync(string to, RTCPeerConnection pc)
@@ -402,7 +414,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 from,
                 pc =>
                 {
-                    pcCloseHooks.ForEach(hook => hook.Invoke(from));
+                    pcCloseHooks.ForEach(hook => HandleHook(nameof(ClosePc), () => hook.Invoke(from)));
                     pc.Close();
                     pcDict.Remove(from);
                 });
