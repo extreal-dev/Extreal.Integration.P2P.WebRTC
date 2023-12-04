@@ -59,6 +59,7 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 if (pcConfig.iceServers is null)
                 {
+                    // Not covered by testing due to defensive implementation
                     Logger.LogDebug("Ice server: None");
                 }
                 else
@@ -383,6 +384,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             catch (Exception e)
             {
+                // Not covered by testing due to defensive implementation
                 Logger.LogError($"Error has occured at {name}", e);
             }
         }
