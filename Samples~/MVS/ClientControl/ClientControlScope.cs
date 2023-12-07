@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SocketIOClient;
 using VContainer;
 using VContainer.Unity;
+using Extreal.Integration.P2P.WebRTC;
 
 namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
@@ -33,7 +34,9 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
             builder.RegisterComponent(peerClient);
 
 #if !UNITY_WEBGL || UNITY_EDITOR
+            builder.RegisterComponent<FailurePeerClient>(new NativeDataChannelClient(peerClient as NativePeerClient))
             builder.RegisterComponent<DataChannelClient>(new NativeDataChannelClient(peerClient as NativePeerClient));
+            builder.RegisterComponent<FailurePeerClient>(new NativeDataChannelClient(peerClient as NativePeerClient))
 #else
             builder.RegisterComponent<DataChannelClient>(new WebGLDataChannelClient());
 #endif
