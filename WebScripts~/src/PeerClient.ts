@@ -254,6 +254,18 @@ class PeerClient {
         this.socket = null;
     };
 
+    private handleHook = async (hook: Function, ...args: any[]) => {
+      try {
+        if (isAsync(hook)){
+          await hook(...args)
+        } else {
+          hook(...args)
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     private createPcAsync = async (id: string, isOffer: boolean) => {
         if (this.pcMap.has(id)) {
             return;
@@ -288,15 +300,7 @@ class PeerClient {
         };
 
         for (const hook of this.pcCreateHooks) {
-            try {
-                if (isAsync(hook)) {
-                    await hook(id, isOffer, pc);
-                } else {
-                    hook(id, isOffer, pc);
-                }
-            } catch (e) {
-                console.error(e);
-            }
+           await this.handleHook(hook, id, isOffer, pc);
         }
         this.pcMap.set(id, pc);
     };
@@ -320,11 +324,7 @@ class PeerClient {
     private closePc = (from: string) => {
         this.handlePc("closePc", from, (pc: RTCPeerConnection) => {
             this.pcCloseHooks.forEach((hook) => {
-                try {
-                    hook(from);
-                } catch (e) {
-                    console.error(e);
-                }
+                this.handleHook(hook, from);
             });
             pc.close();
             this.pcMap.delete(from);
