@@ -111,7 +111,7 @@ namespace Extreal.Integration.P2P.WebRTC
             var socketOptions = peerConfig.SocketOptions;
             var jsonSocketOptions = new JsonSocketOptions
             {
-                ConnectionTimeout = (long) socketOptions.ConnectionTimeout.TotalMilliseconds,
+                ConnectionTimeout = (long)socketOptions.ConnectionTimeout.TotalMilliseconds,
                 Reconnection = socketOptions.Reconnection,
             };
             var jsonPeerConfig = new JsonPeerConfig
@@ -119,7 +119,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Url = peerConfig.SignalingUrl,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
-                VanillaIceTimeout = (long) peerConfig.VanillaIceTimeout.TotalMilliseconds,
+                VanillaIceTimeout = (long)peerConfig.VanillaIceTimeout.TotalMilliseconds,
                 IsDebug = peerConfig.IsDebug
             };
             return JsonSerializer.Serialize(jsonPeerConfig);
