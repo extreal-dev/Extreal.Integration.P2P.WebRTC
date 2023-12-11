@@ -40,6 +40,8 @@ type PeerClientCallbacks = {
     onStarted: OnStarted;
     onConnectFailed: (reason: string) => void;
     onDisconnected: (reason: string) => void;
+    onUserConnected: (id: string) => void;
+    onUserDisconnected: (id: string) => void;
 };
 
 /**
@@ -174,6 +176,8 @@ class PeerClient {
             console.log(`Receive user disconnected: ${event}`);
         }
         this.closePc(event.id);
+
+        this.callbacks.onUserDisconnected(event.id);
     };
 
     private receiveConnectError = (error: Error) => {
@@ -303,6 +307,8 @@ class PeerClient {
            await this.handleHook(() => hook(id, isOffer, pc));
         }
         this.pcMap.set(id, pc);
+
+        this.callbacks.onUserConnected(id);
     };
 
     private sendSdpByCompleteOrTimeoutAsync = async (to: string, pc: RTCPeerConnection) => {
