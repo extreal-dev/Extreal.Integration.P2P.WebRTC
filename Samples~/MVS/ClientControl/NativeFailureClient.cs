@@ -7,7 +7,7 @@ using Unity.WebRTC;
 
 namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
-    public class FailurePeerClient
+    public class NativeFailureClient
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(NativeDataChannelClient));
 
@@ -15,7 +15,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 
         private readonly Dictionary<string, RTCDataChannel> dcDict;
 
-        public FailurePeerClient(NativePeerClient peerClient)
+        public NativeFailureClient(NativePeerClient peerClient)
         {
             dcDict = new Dictionary<string, RTCDataChannel>();
             peerClient.AddPcCreateHook((id, isOffer, pc) => throw new System.Exception("PeerClient Create Error Test"));
