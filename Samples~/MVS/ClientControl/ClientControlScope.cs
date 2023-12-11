@@ -34,11 +34,13 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
             builder.RegisterComponent(peerClient);
 
 #if !UNITY_WEBGL || UNITY_EDITOR
-            builder.RegisterComponent<FailurePeerClient>(new NativeDataChannelClient(peerClient as NativePeerClient))
+            new FailurePeerClient(peerClient as NativePeerClient);
             builder.RegisterComponent<DataChannelClient>(new NativeDataChannelClient(peerClient as NativePeerClient));
-            builder.RegisterComponent<FailurePeerClient>(new NativeDataChannelClient(peerClient as NativePeerClient))
+            new FailurePeerClient(peerClient as NativePeerClient);
 #else
+            builder.RegisterComponent<FailurePeerClient>(new WebGLDataChannelClient());
             builder.RegisterComponent<DataChannelClient>(new WebGLDataChannelClient());
+            builder.RegisterComponent<FailurePeerClient>(new WebGLDataChannelClient());
 #endif
 
             builder.RegisterEntryPoint<ClientControlPresenter>();
