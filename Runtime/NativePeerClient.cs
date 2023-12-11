@@ -209,6 +209,7 @@ namespace Extreal.Integration.P2P.WebRTC
 
             var userDisconnected = response.GetValue<UserDisconnected>();
             ClosePc(userDisconnected.Id);
+            FireOnUserDisconnected(userDisconnected.Id);
         }
 
         private async void ReceiveDisconnectedAsync(object sender, string reason)
@@ -374,6 +375,7 @@ namespace Extreal.Integration.P2P.WebRTC
             };
 
             pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc), () => hook.Invoke(id, isOffer, pc)));
+            FireOnUserConnected(id);
             pcDict.Add(id, pc);
         }
 

@@ -22,6 +22,8 @@ class PeerAdapter {
                 onStarted: () => callback(this.withPrefix("HandleOnStarted")),
                 onConnectFailed: (reason) => callback(this.withPrefix("HandleOnConnectFailed"), reason),
                 onDisconnected: (reason) => callback(this.withPrefix("HandleOnDisconnected"), reason),
+                onUserConnected: (id) => callback(this.withPrefix("HandleOnUserConnected"), id),
+                onUserDisconnected: (id) => callback(this.withPrefix("HandleOnUserDisconnected"), id),
             });
         });
 

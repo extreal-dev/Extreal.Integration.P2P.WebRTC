@@ -39,6 +39,12 @@ namespace Extreal.Integration.P2P.WebRTC
         public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
+        public IObservable<string> OnUserConnected => onUserConnected;
+        private readonly Subject<string> onUserConnected = new Subject<string>();
+
+        public IObservable<string> OnUserDisconnected => onUserDisconnected;
+        private readonly Subject<string> onUserDisconnected = new Subject<string>();
+
         /// <summary>
         /// Whether it is running or not.
         /// </summary>
@@ -127,6 +133,32 @@ namespace Extreal.Integration.P2P.WebRTC
                 return;
             }
             onDisconnected.OnNext(reason);
+        }
+
+        /// <summary>
+        /// Fires the OnUserConnected.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserConnected(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserConnected)}: id={id}");
+            }
+            onUserConnected.OnNext(id);
+        }
+
+        /// <summary>
+        /// Fires the OnUserDisconnected.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserDisconnected(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserDisconnected)}: id={id}");
+            }
+            onUserDisconnected.OnNext(id);
         }
 
         /// <inheritdoc/>
