@@ -114,7 +114,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     return socket;
                 }
                 // Not covered by testing due to defensive implementation
-                StopSocket();
+                await StopSocket();
             }
 
             socket = new SocketIO(peerConfig.SignalingUrl, peerConfig.SocketOptions);
@@ -306,10 +306,10 @@ namespace Extreal.Integration.P2P.WebRTC
 
             pcDict.Clear();
             clientState.Clear();
-            StopSocket();
+            await StopSocket();
         }
 
-        private void StopSocket()
+        private async UniTask StopSocket()
         {
             if (socket is null)
             {
@@ -318,6 +318,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             socket.OnConnected -= ReceiveConnected;
             socket.OnDisconnected -= ReceiveDisconnectedAsync;
+            await socket.DisconnectAsync();
             socket.Dispose();
             socket = null;
         }
