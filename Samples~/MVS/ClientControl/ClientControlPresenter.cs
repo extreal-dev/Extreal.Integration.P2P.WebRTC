@@ -23,7 +23,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         public void Initialize()
         {
             peerClient.OnStarted
-                .Subscribe(_ => appState.Notify($"Received: {nameof(PeerClient.OnStarted)}"))
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnStarted)}\nid: {id}"))
                 .AddTo(disposables);
 
             peerClient.OnStartFailed
