@@ -48,6 +48,8 @@ namespace Extreal.Integration.P2P.WebRTC
         private static void ReceiveListHostsResponse(string jsonResponse, string unused)
             => instance.listHostsResponse = JsonSerializer.Deserialize<ListHostsResponse>(jsonResponse);
 
+        protected override string GetSocketId() => WebGLHelper.CallFunction(WithPrefix(nameof(GetSocketId)));
+
         protected override void DoReleaseManagedResources() => cancellation?.Dispose();
 
         protected override async UniTask<StartHostResponse> DoStartHostAsync(string name)

@@ -414,6 +414,8 @@ class PeerClient {
             console.error(`Error has occurred at ${funcName}`, e);
         }
     };
+
+    public getSocketId = (() => this.socket?.id ?? "");
 }
 
 export { PeerClient };
