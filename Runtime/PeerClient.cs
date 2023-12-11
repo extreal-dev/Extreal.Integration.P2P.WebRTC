@@ -18,8 +18,8 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <summary>
         /// Invokes immediately after the host or client starts.
         /// </summary>
-        public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
-        private readonly Subject<Unit> onStarted = new Subject<Unit>();
+        public IObservable<string> OnStarted => onStarted.AddTo(Disposables);
+        private readonly Subject<string> onStarted = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to start.
@@ -50,6 +50,19 @@ namespace Extreal.Integration.P2P.WebRTC
         protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         private readonly PeerConfig peerConfig;
+
+        public string SocketId
+        {
+            get
+            {
+                var id = GetSocketId();
+                if (string.IsNullOrEmpty(id))
+                {
+                    Logger.LogDebug($"Socket id couldn't get.");
+                }
+                return id;
+            }
+        }
 
         /// <summary>
         /// Creates a new peer client.
@@ -82,7 +95,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started");
             }
             IsRunning = true;
-            onStarted.OnNext(Unit.Default);
+            onStarted.OnNext(SocketId);
         }
 
         /// <summary>
@@ -236,5 +249,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </summary>
         /// <returns>UniTask</returns>
         protected abstract UniTask DoStopAsync();
+
+        protected abstract string GetSocketId();
     }
 }
