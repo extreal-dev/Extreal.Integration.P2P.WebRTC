@@ -37,6 +37,14 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
             peerClient.OnDisconnected
                 .Subscribe(_ => appState.Notify($"Received: {nameof(PeerClient.OnDisconnected)}"))
                 .AddTo(disposables);
+
+            peerClient.OnUserConnected
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserConnected)}\nid: {id}"))
+                .AddTo(disposables);
+
+            peerClient.OnUserDisconnected
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserDisconnected)}\nid: {id}"))
+                .AddTo(disposables);
         }
     }
 }
