@@ -39,9 +39,15 @@ namespace Extreal.Integration.P2P.WebRTC
         public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
+        /// <summary>
+        /// Invokes immediately after another user connects.
+        /// </summary>
         public IObservable<string> OnUserConnected => onUserConnected;
         private readonly Subject<string> onUserConnected = new Subject<string>();
 
+        /// <summary>
+        /// Invokes immediately after another user disconnects.
+        /// </summary>
         public IObservable<string> OnUserDisconnected => onUserDisconnected;
         private readonly Subject<string> onUserDisconnected = new Subject<string>();
 
@@ -57,6 +63,10 @@ namespace Extreal.Integration.P2P.WebRTC
 
         private readonly PeerConfig peerConfig;
 
+        /// <summary>
+        /// Return socket id.
+        /// </summary>
+        /// <value>Socket id</value>
         public string SocketId
         {
             get
@@ -282,6 +292,10 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <returns>UniTask</returns>
         protected abstract UniTask DoStopAsync();
 
+        /// <summary>
+        /// Get socket id.
+        /// </summary>
+        /// <returns>Socket id</returns>
         protected abstract string GetSocketId();
     }
 }
