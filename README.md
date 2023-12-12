@@ -35,9 +35,12 @@
   - Error notification if a name is duplicated (duplicate host name)
   - Error notification if a group cannot be created because a connection cannot be made (connection failure)
 - Virtual space
+  - Own socket ID is displayed when start
   - Client can join a group (client join)
   - Two clients can join a group (multiple client join)
+  - When clients connect, the socket ID of each connected client is displayed
   - Clients can leave the group (client exit)
+  - When clients disconnect, the socket ID of each connected client is displayed
   - Ability to return to the group selection screen (host stop)
   - Error notification if connection is interrupted (connection interrupted)
 
@@ -48,7 +51,11 @@
   - Ability to join a group (join host)
   - Error notification if unable to connect and obtain group list (connection failure)
 - Virtual space
+  - Own socket ID is displayed when start
   - 2nd clients can join a group while still joined (multiple client join)
+  - Socket IDs of already connected clients and host are displayed when start
+  - When a client connects, the socket ID of the client is displayed
+  - When a client disconnects, the socket ID of the client is displayed
   - Ability to return to the group selection screen (leave host)
   - Error notification if connection is interrupted (connection interrupted)
   - Error notification if P2P start processing is timed out (P2P start failed)
