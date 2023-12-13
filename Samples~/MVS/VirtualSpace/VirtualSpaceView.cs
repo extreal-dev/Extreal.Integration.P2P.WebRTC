@@ -9,10 +9,13 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.VirtualSpace
     public class VirtualSpaceView : MonoBehaviour
     {
         [SerializeField] private TMP_Text roleText;
+        [SerializeField] private TMP_Text socketIdText;
         [SerializeField] private Button backButton;
 
         public IObservable<Unit> OnBackButtonClicked => backButton.OnClickAsObservable().TakeUntilDestroy(this);
 
         public void ShowRole(string role) => roleText.text = role;
+
+        public void SetSocketId(string socketId) => socketIdText.text = socketId;
     }
 }
