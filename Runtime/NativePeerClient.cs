@@ -372,7 +372,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             };
 
-            pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc),() => hook.Invoke(id, isOffer, pc)));
+            pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc), () => hook.Invoke(id, isOffer, pc)));
             pcDict.Add(id, pc);
         }
 
