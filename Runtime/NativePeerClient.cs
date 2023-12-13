@@ -549,7 +549,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
         }
 
-        protected override string GetSocketId() => socket.Id;
+        protected override string GetSocketId() => socket?.Id;
     }
 
     [SuppressMessage("Usage", "CC0047")]
