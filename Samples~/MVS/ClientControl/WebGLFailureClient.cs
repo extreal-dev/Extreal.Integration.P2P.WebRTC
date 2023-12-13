@@ -5,7 +5,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
     public class WebGLFailureClient
     {
-        public WebGLFailureClient() => WebGLHelper.CallAction("failure");
+        public static FailureConnect() => WebGLHelper.CallAction("failure");
     }
 }
 #endif

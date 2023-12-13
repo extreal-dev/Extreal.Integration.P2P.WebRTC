@@ -10,4 +10,4 @@ peerAdapter.adapt();
 let dataChannelClient: DataChannelClient;
 addAction("start", () => dataChannelClient = new DataChannelClient(peerAdapter.getPeerClient));
 addAction("clear", () => dataChannelClient.clear);
-addAction("failure", () => new FailureClient(peerAdapter.getPeerClient));
+addAction("failure", () => FailureClient.failureHook(peerAdapter.getPeerClient));
