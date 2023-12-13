@@ -1,7 +1,4 @@
 ﻿#if !UNITY_WEBGL || UNITY_EDITOR
-using System.Collections.Generic;
-using Unity.WebRTC;
-
 namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
     public class NativeFailureClient
