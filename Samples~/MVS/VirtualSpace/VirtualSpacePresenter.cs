@@ -32,6 +32,14 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.VirtualSpace
             virtualSpaceView.OnBackButtonClicked
                 .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget())
                 .AddTo(disposables);
+
+            stageNavigator.OnStageTransitioned
+                .Subscribe(_ => virtualSpaceView.SetSocketId($"My ID: "))
+                .AddTo(disposables);
+
+            appState.OnSocketIdSet
+                .Subscribe(id => virtualSpaceView.SetSocketId($"My ID: {id}"))
+                .AddTo(disposables);
         }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();

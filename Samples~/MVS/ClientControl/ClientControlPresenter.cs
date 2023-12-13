@@ -23,7 +23,11 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         public void Initialize()
         {
             peerClient.OnStarted
-                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnStarted)}\nid: {id}"))
+                .Subscribe(id =>
+                {
+                    appState.Notify($"Received: {nameof(PeerClient.OnStarted)}\nMy ID: {id}");
+                    appState.SetSocketId(id);
+                })
                 .AddTo(disposables);
 
             peerClient.OnStartFailed
@@ -39,11 +43,11 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
                 .AddTo(disposables);
 
             peerClient.OnUserConnected
-                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserConnected)}\nid: {id}"))
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserConnected)}\nConnected user ID: {id}"))
                 .AddTo(disposables);
 
             peerClient.OnUserDisconnected
-                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserDisconnected)}\nid: {id}"))
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserDisconnected)}\nDisconnected user ID: {id}"))
                 .AddTo(disposables);
         }
     }
