@@ -67,13 +67,14 @@ namespace Extreal.Integration.P2P.WebRTC
         /// Return socket id.
         /// </summary>
         /// <value>Socket id</value>
-        public string SocketId
+        private string SocketId
         {
             get
             {
                 var id = GetSocketId();
                 if (string.IsNullOrEmpty(id))
                 {
+                    // Not covered by testing due to defensive implementation
                     Logger.LogDebug($"Socket id couldn't get.");
                 }
                 return id;
