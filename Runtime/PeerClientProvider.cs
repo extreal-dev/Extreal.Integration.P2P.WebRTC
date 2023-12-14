@@ -15,7 +15,7 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </remarks>
         /// <param name="peerConfig">Peer configuration</param>
         /// <returns>PeerClient</returns>
-        [SuppressMessage("Style", "CC0038")]
+        [SuppressMessage("Style", "CC0038"), SuppressMessage("Style", "IDE0022")]
         public static PeerClient Provide(PeerConfig peerConfig)
         {
 #if !UNITY_WEBGL || UNITY_EDITOR
