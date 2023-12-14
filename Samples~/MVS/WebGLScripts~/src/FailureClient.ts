@@ -10,8 +10,8 @@ class FailureClient {
   };
 
   static failureHook(getPeerClient: PeerClientProvider) {
-    getPeerClient.addPcCreateHook(FailureClient.createPc)
-    getPeerClient.addPcCloseHook(FailureClient.closePc);
+    getPeerClient().addPcCreateHook(FailureClient.createPc)
+    getPeerClient().addPcCloseHook(FailureClient.closePc);
   }
 }
 
