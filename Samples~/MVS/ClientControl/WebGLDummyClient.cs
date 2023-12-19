@@ -3,9 +3,9 @@ using Extreal.Integration.Web.Common;
 
 namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
 {
-    public class WebGLFailureClient
+    public class WebGLDummyClient
     {
-        public static void FailureConnect() => WebGLHelper.CallAction("failure");
+        public static void DummyHookSet() => WebGLHelper.CallAction("dummyhook");
     }
 }
 #endif

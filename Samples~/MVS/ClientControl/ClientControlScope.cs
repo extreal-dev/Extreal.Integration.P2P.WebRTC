@@ -37,9 +37,9 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
             builder.RegisterComponent<DataChannelClient>(new NativeDataChannelClient(peerClient as NativePeerClient));
             NativeFailureClient.NativeFailureHook(peerClient as NativePeerClient);
 #else
-            WebGLFailureClient.FailureConnect();
+            WebGLDummyClient.DummyHookSet();
             builder.RegisterComponent<DataChannelClient>(new WebGLDataChannelClient());
-            WebGLFailureClient.FailureConnect();
+            WebGLDummyClient.DummyHookSet();
 #endif
 
             builder.RegisterEntryPoint<ClientControlPresenter>();
