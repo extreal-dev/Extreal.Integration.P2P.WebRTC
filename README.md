@@ -37,10 +37,31 @@
 - Virtual space
   - Own socket ID is displayed when start
   - Client can join a group (client join)
+  - Logs are output to the console in the following order when client join
+
+    ```log
+    Error: CreatePeerClient Error Test
+    Error: CreatePeerClient Async Error Test
+    Dummy createPcAsync Start
+    Dummy createPcAsync Finish
+    New DataChannel: id=XXXXXXXXXXXXXXXXXXXX label=sample
+    Error: CreatePeerClient Error Test
+    Error: CreatePeerClient Async Error Test
+    Dummy createPcAsync Start
+    Dummy createPcAsync Finish
+    ```
+
   - Two clients can join a group (multiple client join)
   - When clients connect, the socket ID of each connected client is displayed
   - Clients can leave the group (client exit)
   - When clients disconnect, the socket ID of each connected client is displayed
+  - Logs are output to the console in the following order when client leave
+
+    ```log
+    Error: ClosePeerClient Error Test
+    Error: ClosePeerClient Error Test
+    ```
+
   - Ability to return to the group selection screen (host stop)
   - Error notification if connection is interrupted (connection interrupted)
 
@@ -54,8 +75,44 @@
   - Own socket ID is displayed when start
   - 2nd clients can join a group while still joined (multiple client join)
   - Socket IDs of already connected clients and host are displayed when start
+  - Logs are output to the console in the following order when start
+
+      ```log
+      Error: CreatePeerClient Error Test
+      Error: CreatePeerClient Async Error Test
+      Dummy createPcAsync Start
+      Dummy createPcAsync Finish
+      Error: CreatePeerClient Error Test
+      Error: CreatePeerClient Async Error Test
+      Dummy createPcAsync Start
+      Dummy createPcAsync Finish
+      ...
+      New DataChannel: id=XXXXXXXXXXXXXXXXXXXX label=sample
+      ```
+
   - When a client connects, the socket ID of the client is displayed
+  - Logs are output to the console in the following order when another client join
+
+    ```log
+    Error: CreatePeerClient Error Test
+    Error: CreatePeerClient Async Error Test
+    Dummy createPcAsync Start
+    Dummy createPcAsync Finish
+    New DataChannel: id=XXXXXXXXXXXXXXXXXXXX label=sample
+    Error: CreatePeerClient Error Test
+    Error: CreatePeerClient Async Error Test
+    Dummy createPcAsync Start
+    Dummy createPcAsync Finish
+    ```
+
   - When a client disconnects, the socket ID of the client is displayed
   - Ability to return to the group selection screen (leave host)
+  - Logs are output to the console in the following order when other client leave
+
+    ```log
+    Error: ClosePeerClient Error Test
+    Error: ClosePeerClient Error Test
+    ```
+
   - Error notification if connection is interrupted (connection interrupted)
   - Error notification if P2P start processing is timed out (P2P start failed)
