@@ -18,8 +18,8 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <summary>
         /// Invokes immediately after the host or client starts.
         /// </summary>
-        public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
-        private readonly Subject<Unit> onStarted = new Subject<Unit>();
+        public IObservable<string> OnStarted => onStarted.AddTo(Disposables);
+        private readonly Subject<string> onStarted = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to start.
@@ -40,6 +40,18 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
         /// <summary>
+        /// Invokes immediately after remote user connects.
+        /// </summary>
+        public IObservable<string> OnUserConnected => onUserConnected;
+        private readonly Subject<string> onUserConnected = new Subject<string>();
+
+        /// <summary>
+        /// Invokes immediately after remote user disconnects.
+        /// </summary>
+        public IObservable<string> OnUserDisconnected => onUserDisconnected;
+        private readonly Subject<string> onUserDisconnected = new Subject<string>();
+
+        /// <summary>
         /// Whether it is running or not.
         /// </summary>
         public bool IsRunning { get; private set; }
@@ -50,6 +62,26 @@ namespace Extreal.Integration.P2P.WebRTC
         protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         private readonly PeerConfig peerConfig;
+
+        private string SocketId
+        {
+            get
+            {
+                var id = GetSocketId();
+                if (string.IsNullOrEmpty(id))
+                {
+                    // Not covered by testing due to defensive implementation
+                    Logger.LogDebug($"Socket id couldn't get.");
+                }
+                return id;
+            }
+        }
+
+        /// <summary>
+        /// Get socket id.
+        /// </summary>
+        /// <returns>Socket id</returns>
+        protected abstract string GetSocketId();
 
         /// <summary>
         /// Creates a new peer client.
@@ -82,7 +114,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started");
             }
             IsRunning = true;
-            onStarted.OnNext(Unit.Default);
+            onStarted.OnNext(SocketId);
         }
 
         /// <summary>
@@ -114,6 +146,32 @@ namespace Extreal.Integration.P2P.WebRTC
                 return;
             }
             onDisconnected.OnNext(reason);
+        }
+
+        /// <summary>
+        /// Fires the OnUserConnected.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserConnected(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserConnected)}: id={id}");
+            }
+            onUserConnected.OnNext(id);
+        }
+
+        /// <summary>
+        /// Fires the OnUserDisconnected.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserDisconnected(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserDisconnected)}: id={id}");
+            }
+            onUserDisconnected.OnNext(id);
         }
 
         /// <inheritdoc/>

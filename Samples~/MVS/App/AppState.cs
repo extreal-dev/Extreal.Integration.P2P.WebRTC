@@ -9,6 +9,10 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.App
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
+        public IObservable<string> OnSocketIdSet => onSocketIdSet.AddTo(disposables);
+        private readonly Subject<string> onSocketIdSet = new Subject<string>();
+        public void SetSocketId(string socketId) => onSocketIdSet.OnNext(socketId);
+
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private PeerRole role = PeerRole.Host;
