@@ -63,10 +63,6 @@ namespace Extreal.Integration.P2P.WebRTC
 
         private readonly PeerConfig peerConfig;
 
-        /// <summary>
-        /// Return socket id.
-        /// </summary>
-        /// <value>Socket id</value>
         private string SocketId
         {
             get
