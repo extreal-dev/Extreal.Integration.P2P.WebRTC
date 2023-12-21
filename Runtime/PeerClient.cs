@@ -40,13 +40,13 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
         /// <summary>
-        /// Invokes immediately after another user connects.
+        /// Invokes immediately after remote user connects.
         /// </summary>
         public IObservable<string> OnUserConnected => onUserConnected;
         private readonly Subject<string> onUserConnected = new Subject<string>();
 
         /// <summary>
-        /// Invokes immediately after another user disconnects.
+        /// Invokes immediately after remote user disconnects.
         /// </summary>
         public IObservable<string> OnUserDisconnected => onUserDisconnected;
         private readonly Subject<string> onUserDisconnected = new Subject<string>();
