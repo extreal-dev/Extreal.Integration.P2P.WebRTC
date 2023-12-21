@@ -78,6 +78,12 @@ namespace Extreal.Integration.P2P.WebRTC
         }
 
         /// <summary>
+        /// Get socket id.
+        /// </summary>
+        /// <returns>Socket id</returns>
+        protected abstract string GetSocketId();
+
+        /// <summary>
         /// Creates a new peer client.
         /// </summary>
         /// <param name="peerConfig">peer configuration</param>
@@ -288,11 +294,5 @@ namespace Extreal.Integration.P2P.WebRTC
         /// </summary>
         /// <returns>UniTask</returns>
         protected abstract UniTask DoStopAsync();
-
-        /// <summary>
-        /// Get socket id.
-        /// </summary>
-        /// <returns>Socket id</returns>
-        protected abstract string GetSocketId();
     }
 }
