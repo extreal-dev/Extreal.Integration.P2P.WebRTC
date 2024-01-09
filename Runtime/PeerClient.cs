@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
@@ -19,36 +20,42 @@ namespace Extreal.Integration.P2P.WebRTC
         /// Invokes immediately after the host or client starts.
         /// </summary>
         public IObservable<string> OnStarted => onStarted.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onStarted = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to start.
         /// </summary>
         public IObservable<Unit> OnStartFailed => onStartFailed.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<Unit> onStartFailed = new Subject<Unit>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to connect to the signaling server.
         /// </summary>
         public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onConnectFailed = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after a host or client connected to the signaling server is disconnected.
         /// </summary>
         public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after remote user connects.
         /// </summary>
         public IObservable<string> OnUserConnected => onUserConnected;
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onUserConnected = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after remote user disconnects.
         /// </summary>
         public IObservable<string> OnUserDisconnected => onUserDisconnected;
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onUserDisconnected = new Subject<string>();
 
         /// <summary>

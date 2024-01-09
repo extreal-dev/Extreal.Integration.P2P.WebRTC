@@ -319,7 +319,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             socket.OnConnected -= ReceiveConnected;
             socket.OnDisconnected -= ReceiveDisconnectedAsync;
-            await socket.DisconnectAsync();
+            await socket.DisconnectAsync().ConfigureAwait(true);
             socket.Dispose();
             socket = null;
         }
