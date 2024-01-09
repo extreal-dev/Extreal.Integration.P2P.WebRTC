@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Integration.P2P.WebRTC.MVS.App;
 using UniRx;
@@ -11,6 +12,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.NotificationControl
         private readonly AppState appState;
         private readonly NotificationControlView notificationControlView;
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private readonly Queue<string> notificationQueue = new Queue<string>();

@@ -12,6 +12,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         private readonly AppState appState;
         private readonly PeerClient peerClient;
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         [SuppressMessage("CodeCracker", "CC0057")]
@@ -51,5 +52,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
                 .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserDisconnected)}{Environment.NewLine}Disconnected user ID: {id}"))
                 .AddTo(disposables);
         }
+
+        protected override void ReleaseManagedResources() => disposables.Dispose();
     }
 }
