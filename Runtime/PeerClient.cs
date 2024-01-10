@@ -70,20 +70,6 @@ namespace Extreal.Integration.P2P.WebRTC
 
         private readonly PeerConfig peerConfig;
 
-        private string SocketId
-        {
-            get
-            {
-                var id = GetSocketId();
-                if (string.IsNullOrEmpty(id))
-                {
-                    // Not covered by testing due to defensive implementation
-                    Logger.LogDebug($"Socket id couldn't get.");
-                }
-                return id;
-            }
-        }
-
         /// <summary>
         /// Get socket id.
         /// </summary>
@@ -121,7 +107,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started");
             }
             IsRunning = true;
-            onStarted.OnNext(SocketId);
+            onStarted.OnNext(GetSocketId());
         }
 
         /// <summary>
