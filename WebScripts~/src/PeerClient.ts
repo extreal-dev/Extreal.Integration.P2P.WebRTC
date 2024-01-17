@@ -176,8 +176,6 @@ class PeerClient {
             console.log(`Receive user disconnected: ${event}`);
         }
         this.closePc(event.id);
-
-        this.callbacks.onUserDisconnected(event.id);
     };
 
     private receiveConnectError = (error: Error) => {
@@ -336,8 +334,12 @@ class PeerClient {
             this.pcCloseHooks.forEach((hook) => {
                 this.handleHook(hook, from);
             });
+            const wasUserConnected = pc.connectionState === "connected";
             pc.close();
             this.pcMap.delete(from);
+            if (wasUserConnected) {
+                this.callbacks.onUserDisconnected(from);
+            }
         });
     };
 

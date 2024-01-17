@@ -209,7 +209,6 @@ namespace Extreal.Integration.P2P.WebRTC
 
             var userDisconnected = response.GetValue<UserDisconnected>();
             ClosePc(userDisconnected.Id);
-            FireOnUserDisconnected(userDisconnected.Id);
         }
 
         private async void ReceiveDisconnectedAsync(object sender, string reason)
@@ -426,8 +425,13 @@ namespace Extreal.Integration.P2P.WebRTC
                 pc =>
                 {
                     pcCloseHooks.ForEach(hook => HandleHook(nameof(ClosePc), () => hook.Invoke(from)));
+                    var wasUserConnected = pc.ConnectionState == RTCPeerConnectionState.Connected;
                     pc.Close();
                     pcDict.Remove(from);
+                    if (wasUserConnected)
+                    {
+                        FireOnUserDisconnected(from);
+                    }
                 });
 
         private UniTask SendSdpAsync(string to, RTCSessionDescription sd)
