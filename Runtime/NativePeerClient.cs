@@ -374,6 +374,14 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             };
 
+            pc.OnConnectionStateChange = state =>
+            {
+                if (state == RTCPeerConnectionState.Connected)
+                {
+                    FireOnUserConnected(id);
+                }
+            };
+
             pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc), () => hook.Invoke(id, isOffer, pc)));
             pcDict.Add(id, pc);
         }
@@ -488,7 +496,6 @@ namespace Extreal.Integration.P2P.WebRTC
                 {
                     await pc.SetRemoteDescription(ref sd);
                     await SendMessageAsync(from, new Message { Type = "done" });
-                    FireOnUserConnected(from);
                 });
 
         private void ReceiveDone(string from)
@@ -497,7 +504,6 @@ namespace Extreal.Integration.P2P.WebRTC
             {
                 clientState.FinishOfferAnswerProcess();
             }
-            FireOnUserConnected(from);
         }
 
         private void ReceiveBye(string from) => ClosePc(from);

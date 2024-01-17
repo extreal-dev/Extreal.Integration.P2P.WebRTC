@@ -303,6 +303,12 @@ class PeerClient {
             }
         };
 
+        pc.onconnectionstatechange = () => {
+            if (pc.connectionState === "connected") {
+                this.callbacks.onUserConnected(id);
+            }
+        }
+
         for (const hook of this.pcCreateHooks) {
            await this.handleHook(hook, id, isOffer, pc);
         }
@@ -378,7 +384,6 @@ class PeerClient {
         await this.handlePcAsync("receiveAnswerAsync", from, async (pc: RTCPeerConnection) => {
             await pc.setRemoteDescription(sd);
             this.sendMessage(from, { type: "done" });
-            this.callbacks.onUserConnected(from);
         });
     };
 
@@ -386,7 +391,6 @@ class PeerClient {
         if (this.role === PeerRole.Client && from === this.hostId) {
             this.clientState.finishOfferAnswerProcess();
         }
-        this.callbacks.onUserConnected(from);
     };
 
     private receiveBye = (from: string) => this.closePc(from);
