@@ -427,7 +427,7 @@ class PeerClient {
         }
     };
 
-    public getSocketId = (() => this.socket?.id ?? "");
+    public getLocalClientId = (() => this.socket?.id ?? "");
 }
 
 export { PeerClient };

@@ -71,10 +71,10 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly PeerConfig peerConfig;
 
         /// <summary>
-        /// Get socket id.
+        /// Get local client id.
         /// </summary>
-        /// <returns>Socket id</returns>
-        protected abstract string GetSocketId();
+        /// <returns>Local client id</returns>
+        protected abstract string GetLocalClientId();
 
         /// <summary>
         /// Creates a new peer client.
@@ -107,7 +107,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started");
             }
             IsRunning = true;
-            onStarted.OnNext(GetSocketId());
+            onStarted.OnNext(GetLocalClientId());
         }
 
         /// <summary>
