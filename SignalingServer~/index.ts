@@ -37,6 +37,7 @@ const log = (logMessage: () => string | object) => {
 
 const corsConfig = {
     origin: Deno.env.get("SIGNALING_CORS_ORIGIN"),
+    credentials: Deno.env.get("SIGNALING_CORS_CREDENTIALS") === "true",
 };
 
 const [pubClient, subClient] = await Promise.all([

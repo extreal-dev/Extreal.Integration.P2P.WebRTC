@@ -28,6 +28,13 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
                         "stun:stun4.l.google.com:19302"
                     }, "test-name", "test-credential")
                 });
+#if UNITY_WEBGL && !UNITY_EDITOR
+            peerConfig = new WebGLPeerConfig(
+                peerConfig,
+                new WebGLSocketOptions(
+                    withCredentials: false
+                ));
+#endif
 
             var peerClient = PeerClientProvider.Provide(peerConfig);
             builder.RegisterComponent(peerClient);
