@@ -28,8 +28,8 @@ namespace Extreal.Integration.P2P.WebRTC
             WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnDisconnected)), HandleOnDisconnected);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveStartHostResponse)), ReceiveStartHostResponse);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveListHostsResponse)), ReceiveListHostsResponse);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserConnected)), HandleOnUserConnected);
-            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserDisconnected)), HandleOnUserDisconnected);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserConnecting)), HandleOnUserConnecting);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserDisconnecting)), HandleOnUserDisconnecting);
         }
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
@@ -51,10 +51,10 @@ namespace Extreal.Integration.P2P.WebRTC
             => instance.listHostsResponse = JsonSerializer.Deserialize<ListHostsResponse>(jsonResponse);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleOnUserConnected(string id, string unused2) => instance.FireOnUserConnected(id);
+        private static void HandleOnUserConnecting(string id, string unused2) => instance.FireOnUserConnecting(id);
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
-        private static void HandleOnUserDisconnected(string id, string unused2) => instance.FireOnUserDisconnected(id);
+        private static void HandleOnUserDisconnecting(string id, string unused2) => instance.FireOnUserDisconnecting(id);
 
         /// <inheritdoc/>
         protected override string GetLocalClientId() => WebGLHelper.CallFunction(WithPrefix(nameof(GetLocalClientId)));

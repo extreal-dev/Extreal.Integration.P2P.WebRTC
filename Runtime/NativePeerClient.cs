@@ -373,13 +373,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             };
 
-            pc.OnConnectionStateChange = state =>
-            {
-                if (state == RTCPeerConnectionState.Connected)
-                {
-                    FireOnUserConnected(id);
-                }
-            };
+            FireOnUserConnecting(id);
 
             pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc), () => hook.Invoke(id, isOffer, pc)));
             pcDict.Add(id, pc);
@@ -424,14 +418,10 @@ namespace Extreal.Integration.P2P.WebRTC
                 from,
                 pc =>
                 {
+                    FireOnUserDisconnecting(from);
                     pcCloseHooks.ForEach(hook => HandleHook(nameof(ClosePc), () => hook.Invoke(from)));
-                    var wasUserConnected = pc.ConnectionState == RTCPeerConnectionState.Connected;
                     pc.Close();
                     pcDict.Remove(from);
-                    if (wasUserConnected)
-                    {
-                        FireOnUserDisconnected(from);
-                    }
                 });
 
         private UniTask SendSdpAsync(string to, RTCSessionDescription sd)

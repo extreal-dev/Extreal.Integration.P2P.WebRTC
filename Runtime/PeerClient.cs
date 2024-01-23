@@ -45,18 +45,18 @@ namespace Extreal.Integration.P2P.WebRTC
         private readonly Subject<string> onDisconnected = new Subject<string>();
 
         /// <summary>
-        /// Invokes immediately after remote user connects.
+        /// Invokes immediately before remote user connects.
         /// </summary>
-        public IObservable<string> OnUserConnected => onUserConnected;
+        public IObservable<string> OnUserConnecting => onUserConnecting;
         [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<string> onUserConnected = new Subject<string>();
+        private readonly Subject<string> onUserConnecting = new Subject<string>();
 
         /// <summary>
-        /// Invokes immediately after remote user disconnects.
+        /// Invokes immediately before remote user disconnects.
         /// </summary>
-        public IObservable<string> OnUserDisconnected => onUserDisconnected;
+        public IObservable<string> OnUserDisconnecting => onUserDisconnecting;
         [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<string> onUserDisconnected = new Subject<string>();
+        private readonly Subject<string> onUserDisconnecting = new Subject<string>();
 
         /// <summary>
         /// Whether it is running or not.
@@ -142,29 +142,29 @@ namespace Extreal.Integration.P2P.WebRTC
         }
 
         /// <summary>
-        /// Fires the OnUserConnected.
+        /// Fires the OnUserConnecting.
         /// </summary>
         /// <param name="id">Id</param>
-        protected void FireOnUserConnected(string id)
+        protected void FireOnUserConnecting(string id)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"{nameof(FireOnUserConnected)}: id={id}");
+                Logger.LogDebug($"{nameof(FireOnUserConnecting)}: id={id}");
             }
-            onUserConnected.OnNext(id);
+            onUserConnecting.OnNext(id);
         }
 
         /// <summary>
-        /// Fires the OnUserDisconnected.
+        /// Fires the OnUserDisconnecting.
         /// </summary>
         /// <param name="id">Id</param>
-        protected void FireOnUserDisconnected(string id)
+        protected void FireOnUserDisconnecting(string id)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"{nameof(FireOnUserDisconnected)}: id={id}");
+                Logger.LogDebug($"{nameof(FireOnUserDisconnecting)}: id={id}");
             }
-            onUserDisconnected.OnNext(id);
+            onUserDisconnecting.OnNext(id);
         }
 
         /// <inheritdoc/>

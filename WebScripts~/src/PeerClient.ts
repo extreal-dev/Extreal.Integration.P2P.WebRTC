@@ -40,8 +40,8 @@ type PeerClientCallbacks = {
     onStarted: OnStarted;
     onConnectFailed: (reason: string) => void;
     onDisconnected: (reason: string) => void;
-    onUserConnected: (id: string) => void;
-    onUserDisconnected: (id: string) => void;
+    onUserConnecting: (id: string) => void;
+    onUserDisconnecting: (id: string) => void;
 };
 
 /**
@@ -303,7 +303,7 @@ class PeerClient {
 
         pc.onconnectionstatechange = () => {
             if (pc.connectionState === "connected") {
-                this.callbacks.onUserConnected(id);
+                this.callbacks.onUserConnecting(id);
             }
         }
 
@@ -331,15 +331,12 @@ class PeerClient {
 
     private closePc = (from: string) => {
         this.handlePc("closePc", from, (pc: RTCPeerConnection) => {
+            this.callbacks.onUserDisconnecting(from);
             this.pcCloseHooks.forEach((hook) => {
                 this.handleHook(hook, from);
             });
-            const wasUserConnected = pc.connectionState === "connected";
             pc.close();
             this.pcMap.delete(from);
-            if (wasUserConnected) {
-                this.callbacks.onUserDisconnected(from);
-            }
         });
     };
 
