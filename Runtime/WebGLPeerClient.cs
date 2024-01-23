@@ -57,7 +57,7 @@ namespace Extreal.Integration.P2P.WebRTC
         private static void HandleOnUserDisconnecting(string id, string unused2) => instance.FireOnUserDisconnecting(id);
 
         /// <inheritdoc/>
-        protected override string GetLocalClientId() => WebGLHelper.CallFunction(WithPrefix(nameof(GetLocalClientId)));
+        protected override string GetClientId() => WebGLHelper.CallFunction(WithPrefix(nameof(GetClientId)));
 
         protected override void DoReleaseManagedResources() => cancellation?.Dispose();
 

@@ -46,7 +46,7 @@ class PeerAdapter {
 
         addAction(this.withPrefix("DoStopAsync"), () => this.getPeerClient().stop());
 
-        addFunction(this.withPrefix("GetLocalClientId"), () => this.getPeerClient().getLocalClientId());
+        addFunction(this.withPrefix("GetClientId"), () => this.getPeerClient().getClientId());
     };
 
     private withPrefix = (name: string) => `WebGLPeerClient#${name}`;
