@@ -28,6 +28,8 @@ namespace Extreal.Integration.P2P.WebRTC
             WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnDisconnected)), HandleOnDisconnected);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveStartHostResponse)), ReceiveStartHostResponse);
             WebGLHelper.AddCallback(WithPrefix(nameof(ReceiveListHostsResponse)), ReceiveListHostsResponse);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserConnecting)), HandleOnUserConnecting);
+            WebGLHelper.AddCallback(WithPrefix(nameof(HandleOnUserDisconnecting)), HandleOnUserDisconnecting);
         }
 
         [MonoPInvokeCallback(typeof(Action<string, string>))]
@@ -47,6 +49,15 @@ namespace Extreal.Integration.P2P.WebRTC
         [MonoPInvokeCallback(typeof(Action<string, string>))]
         private static void ReceiveListHostsResponse(string jsonResponse, string unused)
             => instance.listHostsResponse = JsonSerializer.Deserialize<ListHostsResponse>(jsonResponse);
+
+        [MonoPInvokeCallback(typeof(Action<string, string>))]
+        private static void HandleOnUserConnecting(string id, string unused2) => instance.FireOnUserConnecting(id);
+
+        [MonoPInvokeCallback(typeof(Action<string, string>))]
+        private static void HandleOnUserDisconnecting(string id, string unused2) => instance.FireOnUserDisconnecting(id);
+
+        /// <inheritdoc/>
+        protected override string GetClientId() => WebGLHelper.CallFunction(WithPrefix(nameof(GetClientId)));
 
         protected override void DoReleaseManagedResources() => cancellation?.Dispose();
 
@@ -101,7 +112,7 @@ namespace Extreal.Integration.P2P.WebRTC
             var socketOptions = peerConfig.SocketOptions;
             var jsonSocketOptions = new JsonSocketOptions
             {
-                ConnectionTimeout = (long) socketOptions.ConnectionTimeout.TotalMilliseconds,
+                ConnectionTimeout = (long)socketOptions.ConnectionTimeout.TotalMilliseconds,
                 Reconnection = socketOptions.Reconnection,
             };
             var jsonPeerConfig = new JsonPeerConfig
@@ -109,7 +120,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Url = peerConfig.SignalingUrl,
                 SocketOptions = jsonSocketOptions,
                 PcConfig = jsonRtcConfiguration,
-                VanillaIceTimeout = (long) peerConfig.VanillaIceTimeout.TotalMilliseconds,
+                VanillaIceTimeout = (long)peerConfig.VanillaIceTimeout.TotalMilliseconds,
                 IsDebug = peerConfig.IsDebug
             };
             return JsonSerializer.Serialize(jsonPeerConfig);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
@@ -18,26 +19,44 @@ namespace Extreal.Integration.P2P.WebRTC
         /// <summary>
         /// Invokes immediately after the host or client starts.
         /// </summary>
-        public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
-        private readonly Subject<Unit> onStarted = new Subject<Unit>();
+        public IObservable<string> OnStarted => onStarted.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<string> onStarted = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to start.
         /// </summary>
         public IObservable<Unit> OnStartFailed => onStartFailed.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<Unit> onStartFailed = new Subject<Unit>();
 
         /// <summary>
         /// Invokes immediately after the host or client has failed to connect to the signaling server.
         /// </summary>
         public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onConnectFailed = new Subject<string>();
 
         /// <summary>
         /// Invokes immediately after a host or client connected to the signaling server is disconnected.
         /// </summary>
         public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onDisconnected = new Subject<string>();
+
+        /// <summary>
+        /// Invokes immediately before remote user connects.
+        /// </summary>
+        public IObservable<string> OnUserConnecting => onUserConnecting;
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<string> onUserConnecting = new Subject<string>();
+
+        /// <summary>
+        /// Invokes immediately before remote user disconnects.
+        /// </summary>
+        public IObservable<string> OnUserDisconnecting => onUserDisconnecting;
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<string> onUserDisconnecting = new Subject<string>();
 
         /// <summary>
         /// Whether it is running or not.
@@ -50,6 +69,12 @@ namespace Extreal.Integration.P2P.WebRTC
         protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         private readonly PeerConfig peerConfig;
+
+        /// <summary>
+        /// Get local client id.
+        /// </summary>
+        /// <returns>Local client id</returns>
+        protected abstract string GetClientId();
 
         /// <summary>
         /// Creates a new peer client.
@@ -82,7 +107,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 Logger.LogDebug("P2P started");
             }
             IsRunning = true;
-            onStarted.OnNext(Unit.Default);
+            onStarted.OnNext(GetClientId());
         }
 
         /// <summary>
@@ -114,6 +139,32 @@ namespace Extreal.Integration.P2P.WebRTC
                 return;
             }
             onDisconnected.OnNext(reason);
+        }
+
+        /// <summary>
+        /// Fires the OnUserConnecting.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserConnecting(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserConnecting)}: id={id}");
+            }
+            onUserConnecting.OnNext(id);
+        }
+
+        /// <summary>
+        /// Fires the OnUserDisconnecting.
+        /// </summary>
+        /// <param name="id">Id</param>
+        protected void FireOnUserDisconnecting(string id)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnUserDisconnecting)}: id={id}");
+            }
+            onUserDisconnecting.OnNext(id);
         }
 
         /// <inheritdoc/>

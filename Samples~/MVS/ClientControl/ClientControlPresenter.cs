@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Integration.P2P.WebRTC.MVS.App;
 using UniRx;
@@ -11,6 +12,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         private readonly AppState appState;
         private readonly PeerClient peerClient;
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         [SuppressMessage("CodeCracker", "CC0057")]
@@ -23,7 +25,11 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
         public void Initialize()
         {
             peerClient.OnStarted
-                .Subscribe(_ => appState.Notify($"Received: {nameof(PeerClient.OnStarted)}"))
+                .Subscribe(id =>
+                {
+                    appState.Notify($"Received: {nameof(PeerClient.OnStarted)}{Environment.NewLine}My ID: {id}");
+                    appState.SetSocketId(id);
+                })
                 .AddTo(disposables);
 
             peerClient.OnStartFailed
@@ -37,6 +43,16 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.ClientControl
             peerClient.OnDisconnected
                 .Subscribe(_ => appState.Notify($"Received: {nameof(PeerClient.OnDisconnected)}"))
                 .AddTo(disposables);
+
+            peerClient.OnUserConnecting
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserConnecting)}{Environment.NewLine}Connecting user ID: {id}"))
+                .AddTo(disposables);
+
+            peerClient.OnUserDisconnecting
+                .Subscribe(id => appState.Notify($"Received: {nameof(PeerClient.OnUserDisconnecting)}{Environment.NewLine}Disconnecting user ID: {id}"))
+                .AddTo(disposables);
         }
+
+        protected override void ReleaseManagedResources() => disposables.Dispose();
     }
 }

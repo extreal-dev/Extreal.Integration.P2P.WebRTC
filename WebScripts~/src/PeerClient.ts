@@ -40,6 +40,8 @@ type PeerClientCallbacks = {
     onStarted: OnStarted;
     onConnectFailed: (reason: string) => void;
     onDisconnected: (reason: string) => void;
+    onUserConnecting: (id: string) => void;
+    onUserDisconnecting: (id: string) => void;
 };
 
 /**
@@ -254,12 +256,12 @@ class PeerClient {
         this.socket = null;
     };
 
-    private handleHook = async (hook: Function) => {
+    private handleHook = async (hook: Function, ...args: any[]) => {
       try {
         if (isAsync(hook)){
-          await hook()
+          await hook(...args)
         } else {
-          hook()
+          hook(...args)
         }
       } catch (e) {
         console.error(e);
@@ -299,8 +301,14 @@ class PeerClient {
             }
         };
 
+        pc.onconnectionstatechange = () => {
+            if (pc.connectionState === "connected") {
+                this.callbacks.onUserConnecting(id);
+            }
+        }
+
         for (const hook of this.pcCreateHooks) {
-           await this.handleHook(() => hook(id, isOffer, pc));
+           await this.handleHook(hook, id, isOffer, pc);
         }
         this.pcMap.set(id, pc);
     };
@@ -323,8 +331,9 @@ class PeerClient {
 
     private closePc = (from: string) => {
         this.handlePc("closePc", from, (pc: RTCPeerConnection) => {
+            this.callbacks.onUserDisconnecting(from);
             this.pcCloseHooks.forEach((hook) => {
-                this.handleHook(() => hook(from));
+                this.handleHook(hook, from);
             });
             pc.close();
             this.pcMap.delete(from);
@@ -414,6 +423,8 @@ class PeerClient {
             console.error(`Error has occurred at ${funcName}`, e);
         }
     };
+
+    public getClientId = (() => this.socket?.id ?? "");
 }
 
 export { PeerClient };
