@@ -9,12 +9,16 @@ namespace Extreal.Integration.P2P.WebRTC
 {
     internal class NativeClientState : DisposableBase
     {
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         internal IObservable<Unit> OnStarted => onStarted.AddTo(disposables);
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<bool> isIceCandidateGatheringFinished = new Subject<bool>();
+        [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<bool> isOfferAnswerProcessFinished = new Subject<bool>();
 
         [SuppressMessage("CodeCracker", "CC0092")]

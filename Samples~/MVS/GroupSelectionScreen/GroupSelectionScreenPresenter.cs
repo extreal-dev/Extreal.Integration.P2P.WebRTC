@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.StageNavigation;
@@ -15,6 +16,7 @@ namespace Extreal.Integration.P2P.WebRTC.MVS.GroupSelectionScreen
         private readonly GroupSelectionScreenView groupSelectionScreenView;
         private readonly GroupProvider groupProvider;
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public GroupSelectionScreenPresenter(

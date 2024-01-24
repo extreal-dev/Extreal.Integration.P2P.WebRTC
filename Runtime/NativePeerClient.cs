@@ -114,7 +114,7 @@ namespace Extreal.Integration.P2P.WebRTC
                     return socket;
                 }
                 // Not covered by testing due to defensive implementation
-                StopSocket();
+                await StopSocketAsync();
             }
 
             socket = new SocketIO(peerConfig.SignalingUrl, peerConfig.SocketOptions);
@@ -306,10 +306,10 @@ namespace Extreal.Integration.P2P.WebRTC
 
             pcDict.Clear();
             clientState.Clear();
-            StopSocket();
+            await StopSocketAsync();
         }
 
-        private void StopSocket()
+        private async UniTask StopSocketAsync()
         {
             if (socket is null)
             {
@@ -318,6 +318,7 @@ namespace Extreal.Integration.P2P.WebRTC
             }
             socket.OnConnected -= ReceiveConnected;
             socket.OnDisconnected -= ReceiveDisconnectedAsync;
+            await socket.DisconnectAsync().ConfigureAwait(true);
             socket.Dispose();
             socket = null;
         }
@@ -372,6 +373,8 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             };
 
+            FireOnUserConnecting(id);
+
             pcCreateHooks.ForEach(hook => HandleHook(nameof(CreatePc), () => hook.Invoke(id, isOffer, pc)));
             pcDict.Add(id, pc);
         }
@@ -415,6 +418,7 @@ namespace Extreal.Integration.P2P.WebRTC
                 from,
                 pc =>
                 {
+                    FireOnUserDisconnecting(from);
                     pcCloseHooks.ForEach(hook => HandleHook(nameof(ClosePc), () => hook.Invoke(from)));
                     pc.Close();
                     pcDict.Remove(from);
@@ -545,6 +549,9 @@ namespace Extreal.Integration.P2P.WebRTC
                 }
             }
         }
+
+        /// <inheritdoc/>
+        protected override string GetClientId() => socket?.Id;
     }
 
     [SuppressMessage("Usage", "CC0047")]

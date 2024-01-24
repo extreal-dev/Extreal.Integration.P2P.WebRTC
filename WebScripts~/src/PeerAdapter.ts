@@ -1,5 +1,5 @@
 import { PeerClient } from "./PeerClient";
-import { addAction, callback } from "@extreal-dev/extreal.integration.web.common";
+import { addAction, addFunction, callback } from "@extreal-dev/extreal.integration.web.common";
 
 type PeerClientProvider = () => PeerClient;
 
@@ -22,6 +22,8 @@ class PeerAdapter {
                 onStarted: () => callback(this.withPrefix("HandleOnStarted")),
                 onConnectFailed: (reason) => callback(this.withPrefix("HandleOnConnectFailed"), reason),
                 onDisconnected: (reason) => callback(this.withPrefix("HandleOnDisconnected"), reason),
+                onUserConnecting: (id) => callback(this.withPrefix("HandleOnUserConnecting"), id),
+                onUserDisconnecting: (id) => callback(this.withPrefix("HandleOnUserDisconnecting"), id),
             });
         });
 
@@ -43,6 +45,8 @@ class PeerAdapter {
         );
 
         addAction(this.withPrefix("DoStopAsync"), () => this.getPeerClient().stop());
+
+        addFunction(this.withPrefix("GetClientId"), () => this.getPeerClient().getClientId());
     };
 
     private withPrefix = (name: string) => `WebGLPeerClient#${name}`;
