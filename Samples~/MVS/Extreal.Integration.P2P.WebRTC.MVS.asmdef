@@ -11,8 +11,7 @@
         "Extreal.Core.Common",
         "Extreal.Core.StageNavigation",
         "Extreal.Integration.Web.Common",
-        "Extreal.Integration.P2P.WebRTC",
-        "Extreal.Framework.Analyzer"
+        "Extreal.Integration.P2P.WebRTC"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

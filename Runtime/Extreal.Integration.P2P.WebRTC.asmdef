@@ -7,8 +7,7 @@
         "UniRx",
         "Extreal.Core.Logging",
         "Extreal.Core.Common",
-        "Extreal.Integration.Web.Common",
-        "Extreal.Framework.Analyzer"
+        "Extreal.Integration.Web.Common"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
