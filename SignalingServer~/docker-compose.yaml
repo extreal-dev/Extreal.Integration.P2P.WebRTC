@@ -23,6 +23,8 @@ services:
       SIGNALING_LOGGING: ${SIGNALING_LOGGING:-on}
       # In production, change it to suit the environment.
       SIGNALING_CORS_ORIGIN: ${SIGNALING_CORS_ORIGIN:-*}
+      # In production, change it to suit the environment.
+      SIGNALING_CORS_CREDENTIALS: ${SIGNALING_CORS_CREDENTIALS:-false}
     ports:
       - 3010:3000
     working_dir: /app

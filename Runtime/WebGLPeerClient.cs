@@ -110,10 +110,12 @@ namespace Extreal.Integration.P2P.WebRTC
                     : Array.Empty<JsonRtcIceServer>()
             };
             var socketOptions = peerConfig.SocketOptions;
+            var webGLSocketOptions = peerConfig.WebGLSocketOptions;
             var jsonSocketOptions = new JsonSocketOptions
             {
                 ConnectionTimeout = (long)socketOptions.ConnectionTimeout.TotalMilliseconds,
                 Reconnection = socketOptions.Reconnection,
+                WithCredentials = webGLSocketOptions.WithCredentials,
             };
             var jsonPeerConfig = new JsonPeerConfig
             {
@@ -154,6 +156,9 @@ namespace Extreal.Integration.P2P.WebRTC
 
         [JsonPropertyName("reconnection")]
         public bool Reconnection { get; set; }
+
+        [JsonPropertyName("withCredentials")]
+        public bool WithCredentials { get; set; }
     }
 
     [SuppressMessage("Usage", "CC0047")]
