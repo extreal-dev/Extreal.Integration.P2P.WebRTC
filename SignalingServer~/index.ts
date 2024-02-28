@@ -1,5 +1,4 @@
-import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
-import { createRedisAdapter, createRedisClient, Server, Socket } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
+import { Server, Socket } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
 
 type CreateHostResponse = {
     status: number;
@@ -21,8 +20,6 @@ type Message = {
     to: string;
 };
 
-const redisHost = "signaling-redis";
-
 const isLogging = Deno.env.get("SIGNALING_LOGGING")?.toLowerCase() === "on";
 const logOn = (event: string, socket: Socket) => {
     if (isLogging) {
@@ -40,18 +37,8 @@ const corsConfig = {
     credentials: Deno.env.get("SIGNALING_CORS_CREDENTIALS") === "true",
 };
 
-const [pubClient, subClient] = await Promise.all([
-    createRedisClient({
-        hostname: redisHost,
-    }),
-    createRedisClient({
-        hostname: redisHost,
-    }),
-]);
-
 const io = new Server({
     cors: corsConfig,
-    adapter: createRedisAdapter(pubClient, subClient),
 });
 
 const adapter = io.of("/").adapter;
@@ -132,6 +119,4 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
-await serve(io.handler(), {
-    port: 3000,
-});
+await Deno.serve({ port: 3000, }, io.handler());
